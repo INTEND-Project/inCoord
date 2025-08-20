@@ -1,0 +1,87 @@
+## Refined Problem Statement
+
+The image resizing service is experiencing high latency (currently 550 ms per request) under increased user load. The business objective is to reduce this latency to improve user experience, while also ensuring that resources are not overprovisioned during periods of low demand (i.e., avoid unnecessary cost).
+
+## 1. Problem Decomposition
+
+- **Subcomponent 1: Service Latency**
+  - Current measured end-to-end latency is 550 ms (tunable)
+- **Subcomponent 2: Network Latency**
+  - Network latency is 250 ms (tunable, associated with network topology)
+  - Bandwidth is 50 Mbps (observable, not tunable)
+- **Subcomponent 3: Compute Resource Allocation**
+  - Service CPU limit: 0.25 cores (not tunable)
+  - Memory limit: 512 MiB (not tunable)
+  - Host CPU usage: 10% (not tunable)
+- **Subcomponent 4: Scalability & Cost-Efficiency**
+  - Need to scale service latency and/or network latency depending on load
+  - Avoid overprovisioning during low demand
+
+## 2. Key Insights from Research
+
+- **Best Practice SLIs:** API response time (service latency) and page load time are critical. For user-facing image resizing, a latency below 300 ms is often considered a good threshold for optimal experience.
+- **Network Optimization:** Network latency is a major contributor to total service latency—optimizing this can directly reduce end-to-end response times.
+- **Dynamic Resource Management:** Monitor application response times, throughput, and resource utilization to identify the optimal point for scaling or tuning infrastructure metrics. Employing dynamic infrastructure adaptation is crucial to avoid overprovisioning.
+
+## 3. Estimated Key Metrics
+
+- **Total End-to-End Latency:** Currently 550 ms. Aim for 200–300 ms under peak load for improved user experience.
+- **Service Latency (tunable):** Current: 550 ms | Target: 200–300 ms | Range: 150–600 ms
+- **Network Latency (tunable):** Current: 250 ms | Target: 50–150 ms | Range: 20–300 ms
+  - **Dependency:** Reducing network latency directly lowers total latency.
+- **Bandwidth (not tunable):** 50 Mbps (adequate for typical image sizes unless there are very high concurrent uploads).
+- **CPU/Memory** (not tunable): May limit how much latency can be improved.
+
+## 4. Constraints & Assumptions
+
+- Only Service Latency and Network Latency are tunable.
+- Compute and memory limits are fixed.
+- Bandwidth is reasonable for the workload.
+- No further details for scaling (no information on horizontal scaling or autoscaling group configuration).
+- User demand fluctuates; solution must allow for dynamic adaptation.
+
+---
+
+## Configurable Metrics
+
+| Metric           | Current Value | Estimated Value (Target) | Min–Max Range | Dependencies                | Description                                                                          |
+|------------------|--------------|--------------------------|---------------|-----------------------------|--------------------------------------------------------------------------------------|
+| Service Latency  | 550 ms       | 200–300 ms               | 150–600 ms    | Network Latency, Load       | Total time the service takes to process an image. Tunable based on optimization.      |
+| Network Latency  | 250 ms       | 50–150 ms                | 20–300 ms     | Service Latency             | Time data spends traversing network. Tunable via network path/optimization actions.   |
+
+---
+
+## Observable Metrics
+
+| Metric                | Current Value | Estimated Value (Target) | Min–Max Range | Dependencies         | Description                                                            |
+|-----------------------|--------------|--------------------------|---------------|----------------------|------------------------------------------------------------------------|
+| Service Latency       | 550 ms       | 200–300 ms               | 150–600 ms    | Network Latency      | As above                                                               |
+| Network Latency       | 250 ms       | 50–150 ms                | 20–300 ms     | Service Latency      | As above                                                               |
+| Bandwidth             | 50 Mbps      | 50 Mbps                  | 25–100 Mbps   | Network Latency      | Not tunable; should be adequate for image workloads                    |
+| Service CPU Limit     | 0.25 cores   | 0.25 cores               | n/a           | Service Latency      | Not tunable; may limit possible improvements in latency                 |
+| Service Memory Limit  | 512 MiB      | 512 MiB                  | n/a           | Service Latency      | Not tunable; may limit possible improvements in latency                 |
+| Host CPU Usage        | 10%          | 10–50% (under load)      | 10–100%       | Service CPU Limit    | Not tunable; reflects actual compute usage                              |
+
+---
+
+## Recommendations (Metric-Focused)
+
+- **Optimize Service Latency (Tunable):**
+  - Lower the service latency setting toward 200–300 ms. This should be monitored in real time and adjusted based on observed user demand and load.
+- **Optimize Network Latency (Tunable):**
+  - Reduce network latency closer to the 50–150 ms range where possible. This may involve network path optimizations or priority tuning, if available.
+- **Dynamic Adjustment Strategy:**
+  - Implement logic or automation (e.g., schedule, load-triggered policies) to increase resource allocation or reduce latency parameters during periods of high load, and relax them during low-utilization periods to avoid overprovisioning.
+
+---
+
+### Summary
+
+By tuning the **Service Latency** and **Network Latency** metrics, you can directly improve the user experience for image resizing during peak demand and avoid excess resource use during off-peak times. These two metrics are the only tunable levers given your current infrastructure constraints. Monitoring these metrics in real time and adjusting them adaptively based on observed load will best balance user experience and operational cost. 
+
+If dynamic scaling of these settings is supported by your platform, configure threshold-based triggers (e.g., on request rate or queue depth) to automatically lower latency targets when needed and relax them when demand subsides.
+
+**References:**  
+- [Cloud Optimization Best Practices (IBM)](https://www.ibm.com/think/topics/cloud-optimization)  
+- [DigitalOcean Cloud Metrics Guide](https://www.digitalocean.com/resources/articles/cloud-metrics)  
+- [Avoiding Over-Provisioning - Acceldata](https://www.acceldata.io/blog/over-provisioning)
