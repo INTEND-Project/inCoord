@@ -1,0 +1,67 @@
+The 'K3s Cluster' has the following metrics associated with it:
+
+- **Network Throughput**: 4.27 MBps
+- **Network Latency**: 100 ms
+The metrics connected to the K3s Host named 'worker1' are:
+
+1. **Service Throughput**: 30 req/s
+2. **Service Latency**: 200 ms
+The metrics associated with the Service named 'Object detection' are:
+
+1. **Service Throughput**: 30 req/s
+2. **Service Latency**: 200 ms
+The metrics linked to the Network Topology are:
+
+1. **Network Throughput**: 4.27 MBps
+2. **Network Latency**: 100 ms
+The tunable status of the Service Latency metric is True.
+The tunable status of the Network Throughput metric is true.
+The tunable status of the Network Latency metric is True.
+The unit of measurement for the Service Latency metric is milliseconds (ms).
+The unit of measurement for the Network Throughput metric is MBps (Megabytes per second).
+The unit of measurement for the Network Latency metric is milliseconds (ms).
+The current values of the Service Latency metric are: 20, 50, 200, 20, and 10.
+The current value of the Network Throughput metric is 4.27.
+The current value of the Network Latency metric is 100.
+There are 6 pods allocated for the Object detection service in the Kubernetes Cluster.
+The drones sending data to the Kubernetes Cluster are Source Drone 1, Source Drone 2, Source Drone 3, and Source Drone 4.
+The names of all K3s Hosts in the Kubernetes Cluster are: master, worker1, worker2, worker3.
+Yes, besides Object detection, the K3s Cluster is running the following services: Alarm, DB, Resize image, and Black and white.
+The information regarding the current CPU and memory usage for the K3s Host 'worker1' is not available.
+**Worker2 Performance Metrics:**
+- Alarm: 
+  - Throughput: 10
+  - Latency: 20
+- DB: 
+  - Throughput: 200
+  - Latency: 10
+
+**Worker3 Performance Metrics:**
+- Resize image: 
+  - Throughput: 100
+  - Latency: 20
+- Black and white: 
+  - Throughput: 120
+  - Latency: 50
+A total of 14 pods are allocated in the K3s Cluster.
+The Object detection service in the Kubernetes Cluster has 6 pods running. Specific configurations regarding resource limits and request settings were not provided.
+The expected data volume from each Source Drone to the Kubernetes Cluster (K3s Cluster) is not specified in the provided information.
+Yes, there are additional network metrics being monitored that are not included in the current system state. These metrics are:
+
+1. **Network Throughput**: 4.27 MBps
+2. **Network Latency**: 100 ms
+No information is available regarding the current CPU and memory usage for the K3s Host 'worker1'.
+The Object detection service in the K3s Cluster has a total of 6 pods configured. Specific resource limits and request settings were not detailed in the provided information.
+The expected data volume from each Source Drone to the Kubernetes Cluster (K3s Cluster) includes:
+
+- **Source Drone 1**: Sends data to master, worker1, worker2, worker3
+- **Source Drone 2**: Sends data to master, worker1, worker2, worker3
+- **Source Drone 3**: Sends data to master, worker1, worker2, worker3
+- **Source Drone 4**: Sends data to master, worker1, worker2, worker3
+
+Each Source Drone connects to all four hosts in the K3s Cluster.
+The current CPU and memory usage metrics for the K3s Host 'worker1' were not provided in the information. Only service throughput and latency metrics for the Object detection service are available: 
+
+- Service Throughput: 30 req/s
+- Service Latency: 200 ms
+The Object detection service in the K3s Cluster has 6 pods configured. Specific resource limits and request settings were not provided.

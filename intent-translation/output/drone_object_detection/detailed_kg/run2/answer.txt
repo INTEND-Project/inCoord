@@ -1,0 +1,136 @@
+### 1. Plan Formation & Problem Breakdown
+
+#### Refined Problem Statement
+The objective is to ensure that a drone operating in Vienna can reliably and in real-time send object detection (specifically people) classifications to a dashboard, with no data loss. "Real-time" implies sufficiently low end-to-end latency for classifications to be actionable (typically under 1 second, but often much faster). "No loss" means every classification must be transmitted and received at the dashboard.
+
+#### Subcomponents:
+- **Latency**: Total end-to-end delay from detection on drone to dashboard display.
+- **Throughput**: Number of classification events processed/transmitted per second.
+- **Bandwidth**: Sufficient to carry all object detection outputs.
+- **Reliability/Packet Loss**: Must be minimized or eliminated.
+- **Infrastructure Constraints**: Focus on tunable metrics – Service Latency, Service Throughput, Network Latency, Network Throughput.
+---
+
+### 2. Information Gathering & Synthesis
+
+#### **Key Insights from System State & Web/Expert Search**
+
+- **Service Latency (Object Detection)**: 200 ms (tunable, initial value)
+- **Service Throughput (Object Detection)**: 30 req/s (tunable, initial value)
+- **Network Latency**: 100 ms (tunable, initial value)
+- **Network Throughput**: 4.27 MBps (tunable, initial value)
+- **Switch Bandwidth**: 50 Mbps per switch (sufficient for classification data)
+- **Host/CPU Usage**: Not tunable (monitored, not directly actionable)
+- **Real-Time Standards**: Literature suggests inference times of 50–200 ms are considered real-time for drone object detection (source: [MDPI paper](https://www.mdpi.com/2504-446X/7/10/620), surveillance UAV study).
+- **Urban Environment (Vienna)**: Potential for moderate wireless interference and physical obstacles, but within cluster network (wired/LAN), these are less relevant; focus is on internal infra.
+
+---
+
+### 3. Metric Estimation & Modeling
+
+#### **Estimated & Target Values (Based on Research and Cloud Best Practices)**
+
+- **Service Latency**
+  - Current: 200 ms
+  - Target: ≤100 ms (to allow room for network/dash latency; real-time experience)
+  - Typical Min-Max: 50–200 ms
+  - Dependency: Depends on CPU/memory allocation (not tunable here, so focus on infra metrics).
+
+- **Service Throughput**
+  - Current: 30 req/s
+  - Target: ≥30 req/s (assuming one classification per video frame at 30 FPS; matches common video rates)
+  - Typical Min-Max: 10–60 req/s (depending on frame rate, detection complexity)
+  - Dependency: Limited by network throughput and service latency.
+
+- **Network Latency**
+  - Current: 100 ms
+  - Target: ≤50 ms (to achieve end-to-end <200 ms; best practice for "real-time" dashboards)
+  - Typical Min-Max: 10–100 ms (wired LAN)
+
+- **Network Throughput**
+  - Current: 4.27 MBps
+  - Target: Sufficient for object detection metadata streams; 4.27 MBps ≈ 34 Mbps is adequate.
+  - Min-Max: 1–10 MBps needed (if only transmitting classification results, not video).
+  - Dependency: Should be scaled if more drones/events are added.
+
+---
+
+### 4. Constraints & Assumptions
+
+- **Assumptions**:
+  - Only object detection classification results (small JSON/text) are sent, not full video.
+  - No hard constraint on cost.
+  - Dashboard is connected to the same internal network as the K3s cluster.
+  - Urban interference is minimal due to internal (wired or high-quality wireless) infra.
+- **Constraints**:
+  - Only tunable infra metrics (latency, throughput, service-level configs).
+  - Cannot upgrade hardware or move services.
+
+---
+
+### 5. Configurable (Tunable) Metrics Table
+
+| Metric Name             | Description                                       | Current Value | Estimated/Target Value | Min-Max Range      | Dependencies                |
+|-------------------------|---------------------------------------------------|---------------|-----------------------|--------------------|-----------------------------|
+| Service Latency         | Object detection service processing time per req  | 200 ms        | ≤100 ms               | 50–200 ms          | Network latency, throughput |
+| Service Throughput      | Classifications sent/sec                          | 30 req/s      | ≥30 req/s             | 10–60 req/s        | Service latency, bandwidth  |
+| Network Latency         | Time for data to travel across infra              | 100 ms        | ≤50 ms                | 10–100 ms          | None                        |
+| Network Throughput      | Data transfer capacity of infra                   | 4.27 MBps     | ≥4.27 MBps            | 1–10 MBps+         | Service throughput          |
+
+---
+
+### 6. Observable Metrics Table (All Relevant)
+
+| Metric Name               | Current Value | Estimated/Target Value | Min-Max Range      | Dependencies                     |
+|---------------------------|---------------|-----------------------|--------------------|-----------------------------------|
+| Service Latency           | 200 ms        | ≤100 ms               | 50–200 ms          | Network latency, throughput       |
+| Service Throughput        | 30 req/s      | ≥30 req/s             | 10–60 req/s        | Service latency, bandwidth        |
+| Network Latency           | 100 ms        | ≤50 ms                | 10–100 ms          | None                              |
+| Network Throughput        | 4.27 MBps     | ≥4.27 MBps            | 1–10 MBps+         | Service throughput                |
+| Host CPU Usage (worker1)  | 50%           | Monitored             | 30–90%             | Service workload                  |
+| Switch Bandwidth          | 50 Mbps       | Sufficient            | 10–100 Mbps        | Network throughput                |
+
+---
+
+## **Summary of Actions**
+
+- **Tune Service Latency**: Configure to ≤100 ms if possible.
+- **Tune Service Throughput**: Ensure ≥30 req/s to match the expected detection rate.
+- **Tune Network Latency**: Reduce to ≤50 ms through quality infra settings.
+- **Tune Network Throughput**: Ensure ≥4.27 MBps (preferably higher for headroom).
+
+All above metrics should be closely monitored; adjust tunable parameters as needed to maintain or improve real-time, lossless, and reliable object detection classification streaming to the dashboard.
+
+---
+
+**Note:**  
+- If further reductions in loss/latency are required, increase network throughput and decrease network latency as much as possible.
+- If the dashboard is remote (outside local cluster), additional internet/WAN latency must be accounted for, typically outside direct infra control.
+
+---
+
+### Configurable Metrics
+
+| Metric                | Description                             | Current Value | Target Value   | Min-Max Range | Dependencies                  |
+|-----------------------|-----------------------------------------|---------------|---------------|--------------|-------------------------------|
+| Service Latency       | Object detection service latency        | 200 ms        | ≤100 ms       | 50–200 ms    | Network latency, throughput   |
+| Service Throughput    | Classifications/second                  | 30 req/s      | ≥30 req/s     | 10–60 req/s  | Service latency, bandwidth    |
+| Network Latency       | Infra network latency                   | 100 ms        | ≤50 ms        | 10–100 ms    | None                          |
+| Network Throughput    | Infra network throughput                | 4.27 MBps     | ≥4.27 MBps    | 1–10 MBps    | Service throughput            |
+
+---
+
+### Observable Metrics
+
+| Metric                | Current Value | Target Value   | Min-Max Range | Dependencies                  |
+|-----------------------|---------------|---------------|--------------|-------------------------------|
+| Service Latency       | 200 ms        | ≤100 ms       | 50–200 ms    | Network latency, throughput   |
+| Service Throughput    | 30 req/s      | ≥30 req/s     | 10–60 req/s  | Service latency, bandwidth    |
+| Network Latency       | 100 ms        | ≤50 ms        | 10–100 ms    | None                          |
+| Network Throughput    | 4.27 MBps     | ≥4.27 MBps    | 1–10 MBps    | Service throughput            |
+| Host CPU Usage        | 50%           | N/A           | 30–90%       | Service workload              |
+| Switch Bandwidth      | 50 Mbps       | Sufficient    | 10–100 Mbps  | Network throughput            |
+
+---
+
+If you require step-by-step guidance on adjusting these metrics, or have more details (e.g., whether dashboard is local or remote), please provide them.

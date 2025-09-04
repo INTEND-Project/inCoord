@@ -1,0 +1,35 @@
+The details of the 'Resize image' service are as follows:
+
+- **Service Latency**: 550 ms (tunable)
+- **Service CPU Limit**: 0.25 cores (not tunable)
+- **Service Memory Limit**: 512 MiB (not tunable) 
+
+These metrics are associated with worker3.
+The K3sHost running the 'Resize image' service is **worker3**. The associated metrics are:
+
+- **Service Latency**: 550 ms
+- **Service CPU Limit Cores**: 0.25 cores
+- **Service Memory Limit MiB**: 512 MiB
+For the K3sHost 'worker3' running the 'Resize image' service, the CPU usage metric is 10, and it is not tunable.
+The current service latency for the 'Resize image' service is 550 ms, and it is tunable.
+The CPU limit core metric for the 'Resize image' service is 0.25, and it is not tunable.
+The memory limit for the 'Resize image' service is 512 MiB, and it is not tunable.
+No information is available regarding the network latency metric for K3sHosts or its tunability.
+No information is available regarding the network topology or metrics associated with the K3sHosts running the 'Resize image' service.
+The switch connected to the K3sHosts running the 'Resize image' service is switch4, which is connected to worker3. The specific metrics provided by this switch are not detailed in the information provided.
+The bandwidth for the connections between K3sHosts and their associated switches is 50 Mbps, and the latency is 21 ms. This applies consistently across all connections.
+There is no information available regarding the network latency metric for K3sHosts running the 'Resize image' service.
+The information about the network topology associated with the K3sHosts running the 'Resize image' service is not available.
+The metric linked to the network topology is Network Latency, which has a value of 250 ms and is tunable.
+The switch (switch4) provides the following metric:
+
+- Host CPU Usage: 10% (not tunable)
+There is no available information regarding the network latency metric for K3sHosts running the 'Resize image' service.
+There is no information available regarding the network topology associated with the K3sHosts running the 'Resize image' service.
+The metric linked to the network topology is **Network Latency**, which has a value of **250 ms** and is tunable.
+No specific metrics for switch4 are provided.
+There is no available information regarding the network latency metric for K3sHosts running the 'Resize image' service, nor its tunability.
+The network topology associated with the K3sHosts running the 'Resize image' service is referred to as "Network Topology."
+The switch (switch4) provides the following metric:
+
+- Host CPU Usage: 10% (not tunable)

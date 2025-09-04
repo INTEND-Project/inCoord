@@ -1,0 +1,143 @@
+The drones have the following specifications regarding processing power:
+
+- **Master Node CPU Usage**: 75.3%
+- **Worker Nodes CPU Usage**:
+  - Worker 1: 50%
+  - Worker 2: 40%
+  - Worker 3: 30% 
+
+Onboard capabilities were not specified in the provided information.
+The following Source nodes are connected to the Kubernetes Cluster (K3s Cluster):
+
+1. Source Drone 1
+2. Source Drone 2
+3. Source Drone 3
+4. Source Drone 4
+
+The specific data they send is not provided.
+The available K3sHosts in the Kubernetes Cluster are:
+
+1. **master**
+2. **worker1**
+3. **worker2**
+4. **worker3**
+The metrics associated with the Object Detection service are:
+
+1. **Service Throughput**: 30 req/s
+2. **Service Latency**: 200 ms
+
+The tunable metrics among these are not specified in the information provided.
+The Service Latency for the Object Detection service is 200 milliseconds, and it is tunable.
+There is no information available regarding the network latency related to K3s hosts or its tunability.
+The Service Throughput for the Object Detection service is 30, and it is tunable.
+The information regarding the Network Throughput for the K3sHosts and its tunability is not available.
+The Switch nodes connected to the K3sHosts are:
+
+1. **Switch1**: Bandwidth - 50, Latency - 5
+2. **Switch2**: Bandwidth - 50, Latency - 5
+3. **Switch3**: Bandwidth - 50, Latency - 5
+4. **Switch4**: Bandwidth - 50, Latency - 5
+Network Topology refers to the arrangement of various elements (links, nodes, etc.) in a computer network. Associated metrics include:
+
+1. **Network Throughput**: 4.27 MBps
+2. **Network Latency**: 100 ms
+
+Both metrics are tunable.
+The available service metrics for the Object Detection service are:
+
+1. **Service Throughput** - Tunable: Yes
+2. **Service Latency** - Tunable: Yes
+3. **Service CPU Limit Cores** - Tunable: No
+4. **Service Memory Limit MiB** - Tunable: No
+The Object detection service runs on the K3sHost node named **worker1** with the following metric: 
+
+- **Host CPU Usage**: 50%
+Each Drone is associated with the following connected metric:
+
+- **Metric:** Host CPU Usage
+- **Tunability:** False
+
+This applies uniformly across all Drones (Source Drone 1, 2, 3, and 4).
+The metrics associated with each K3sHost are as follows:
+
+- **master**: Host CPU Usage (Tunable: False)
+- **worker1**: Host CPU Usage (Tunable: False)
+- **worker2**: Host CPU Usage (Tunable: False)
+- **worker3**: Host CPU Usage (Tunable: False)
+Metrics associated with each switch:
+
+- **Switch 1**
+  - Host CPU Usage: Not Tunable
+
+- **Switch 2**
+  - Host CPU Usage: Not Tunable
+
+- **Switch 3**
+  - Host CPU Usage: Not Tunable
+The connected metrics for the NetworkTopology are:
+
+1. Network Throughput - Tunable
+2. Network Latency - Tunable
+The onboard capabilities of the drones include monitoring their host CPU usage, which varies as follows:
+
+- **75.3% usage**: Source Drone 1, Source Drone 2, Source Drone 3, Source Drone 4.
+- **50% usage**: Source Drone 1, Source Drone 2, Source Drone 3, Source Drone 4.
+- **40% usage**: Source Drone 1, Source Drone 2, Source Drone 3, Source Drone 4.
+- **30% usage**: Source Drone 1, Source Drone 2, Source Drone 3, Source Drone 4.
+The Source nodes (Drone 1, 2, 3, and 4) send data to the K3s Cluster.
+There is no available information regarding the network latency related to K3sHosts or its tunability.
+There is no available information regarding the Network Throughput for the K3sHosts or its tunability.
+The tunability statuses for all metrics associated with the K3sHosts are as follows:
+
+- Host CPU Usage: Not tunable (4 instances)
+All switches have the following tunability statuses for the metric "Host CPU Usage":
+
+- Switch 1: Not tunable
+- Switch 2: Not tunable
+- Switch 3: Not tunable
+- Switch 4: Not tunable
+The onboard capabilities of the drones include monitoring host CPU usage. The CPU usage values recorded are as follows:
+
+- 75.3%
+- 50%
+- 40%
+- 30% 
+
+These values are consistent across all four drones.
+The Source nodes (Drone 1, 2, 3, and 4) send data to the K3s Cluster. Specific details about the type of data sent are not provided.
+There is no available information regarding the network latency related to K3sHosts or its tunability.
+The information regarding the Network Throughput for K3sHosts and its tunability is not available.
+The drones have the following onboard capabilities:
+
+1. **Object Detection**
+   - Service Throughput
+   - Service Latency
+   - Service CPU Limit Cores
+   - Service Memory Limit MiB
+
+2. **Alarm**
+   - Service Throughput
+   - Service Latency
+   - Service CPU Limit Cores
+   - Service Memory Limit MiB
+
+3. **Database (DB)**
+   - Service Throughput
+   - Service Latency
+   - Service CPU Limit Cores
+   - Service Memory Limit MiB
+
+4. **Image Processing**
+   - Resize Image
+     - Service Throughput
+     - Service Latency
+     - Service CPU Limit Cores
+     - Service Memory Limit MiB
+   - Black and White
+     - Service Throughput
+     - Service Latency
+     - Service CPU Limit Cores
+     - Service Memory Limit MiB
+The Source nodes (Drone 1, 2, 3, and 4) send data to the K3s Cluster. However, specific details on the type of data sent are not provided.
+There is no specific information available regarding the network latency related to K3sHosts or its tunability.
+There is no available information regarding the Network Throughput for the K3sHosts or its tunability.

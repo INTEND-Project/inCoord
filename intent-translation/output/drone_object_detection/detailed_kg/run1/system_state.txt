@@ -1,0 +1,105 @@
+The K3sCluster is named "K3s Cluster" and its type is "K3s."
+The K3sHosts connected to the K3sCluster and their associated metrics are:
+
+- **master**: Host CPU Usage
+- **worker1**: Host CPU Usage
+- **worker2**: Host CPU Usage
+- **worker3**: Host CPU Usage
+No specific metrics related to CPU and memory usage for K3sHosts are available.
+Here are the services running on each K3sHost along with their associated metrics:
+
+- **worker1**
+  - Service: Object detection
+  - Metric: Host CPU Usage
+
+- **worker2**
+  - Service: Alarm
+  - Metric: Host CPU Usage
+  - Service: DB
+  - Metric: Host CPU Usage
+
+- **worker3**
+  - Service: Resize image
+  - Metric: Host CPU Usage
+  - Service: Black and white
+  - Metric: Host CPU Usage
+Here are the host CPU usage metrics for each service running on the K3sHosts:
+
+- **Resize image**: 30%
+- **Black and white**: 30%
+- **Object detection**: 50%
+- **Alarm**: 40%
+- **DB**: 40%
+
+Metrics related to service latency, network latency, and service throughput are not provided.
+The tunability of the metrics is as follows:
+
+- Service Throughput: Tunable
+- Service Latency: Tunable
+- Service CPU Limit Cores: Not tunable
+- Service Memory Limit MiB: Not tunable
+- Host CPU Usage: Not tunable
+- Network Throughput: Tunable
+- Network Latency: Tunable
+Here are the service latencies for different tasks:
+
+- **Resize image**: 20 ms (2 pods)
+- **Black and white**: 50 ms (3 pods)
+- **Object detection**: 200 ms (6 pods)
+- **Alarm**: 20 ms (1 pod)
+- **DB**: 10 ms (2 pods)
+The network latency is 100 ms.
+Here are the service throughputs:
+
+- Resize image: 100 req/s
+- Black and white: 120 req/s
+- Object detection: 30 req/s
+- Alarm: 10 req/s
+- Database (DB): 200 req/s
+The host CPU usage readings are as follows:
+- 75.3%
+- 50%
+- 40%
+- 30%
+There is no information available regarding the switches connected to the K3sHosts or their metrics.
+No information is available regarding the network topology associated with the K3sCluster or the metrics tied to this topology.
+The drones sending data to the Kubernetes Cluster and their linked sources are as follows:
+
+- Source Drone 2: linked to Source Drone 1
+- Source Drone 3: linked to Source Drone 1
+- Source Drone 4: linked to Source Drone 1
+- Source Drone 1: linked to Source Drone 2
+- Source Drone 3: linked to Source Drone 2
+- Source Drone 4: linked to Source Drone 2
+- Source Drone 1: linked to Source Drone 3
+- Source Drone 2: linked to Source Drone 3
+- Source Drone 4: linked to Source Drone 3
+- Source Drone 1: linked to Source Drone 4
+- Source Drone 2: linked to Source Drone 4
+- Source Drone 3: linked to Source Drone 4
+No specific metrics related to CPU and memory usage for K3sHosts are available.
+There is no information available regarding the switches connected to the K3sHosts or their metrics.
+The information regarding the network topology associated with the K3sCluster and its related metrics is not available.
+There is no information available regarding the lack of metrics related to CPU and memory usage for K3sHosts.
+The specific switches connected to each K3sHost and the metrics obtained are as follows:
+
+- **master**: Connected to **switch1**; Metric: **Host CPU Usage**
+- **worker1**: Connected to **switch2**; Metric: **Host CPU Usage**
+- **worker2**: Connected to **switch3**; Metric: **Host CPU Usage**
+- **worker3**: Connected to **switch4**; Metric: **Host CPU Usage**
+The current network topology associated with the K3sCluster includes the following metrics:
+
+1. **Network Throughput**: 4.27 MBps
+2. **Network Latency**: 100 ms
+There is no information available regarding the absence of CPU and memory usage metrics for K3sHosts.
+The specific switches connected to each K3sHost and their metrics are as follows:
+
+- **K3sHost: master** - Switch: **switch1**, Metric: **Host CPU Usage**
+- **K3sHost: worker1** - Switch: **switch2**, Metric: **Host CPU Usage**
+- **K3sHost: worker2** - Switch: **switch3**, Metric: **Host CPU Usage**
+- **K3sHost: worker3** - Switch: **switch4**, Metric: **Host CPU Usage**
+The current network topology associated with the K3sCluster includes the following metrics:
+
+1. **Network Throughput**: 4.27 MBps
+2. **Network Latency**: 100 ms
+No specific CPU and memory metrics for the K3sHosts are available.

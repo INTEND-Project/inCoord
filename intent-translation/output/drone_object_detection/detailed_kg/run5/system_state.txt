@@ -1,0 +1,54 @@
+The metrics associated with the Drone named 'Source Drone 1' are:
+
+- Host CPU Usage (not tunable)
+
+(Note: The same metric is repeated multiple times.)
+There are no metrics associated with the Kubernetes Cluster named 'K3s Cluster' available at this time.
+The K3sHost named 'worker1' has the metric 'Host CPU Usage', which is not tunable.
+The metrics associated with the 'Object detection' service are:
+
+1. Service Throughput (tunable)
+2. Service Latency (tunable)
+3. Service CPU Limit Cores (not tunable)
+4. Service Memory Limit MiB (not tunable)
+The metrics associated with the switch named 'switch1' are:
+
+1. Network Throughput - Tunable: Yes
+2. Network Latency - Tunable: Yes
+The metrics associated with the NetworkTopology named 'Network Topology' are:
+
+1. Network Throughput (tunable)
+2. Network Latency (tunable)
+The metric 'Host CPU Usage' is repeated multiple times for 'Source Drone 1' because it reflects different recorded values at distinct time intervals. The recorded values are 75.3%, 50%, 40%, and 30%.
+Yes, the metrics available for the 'K3s Cluster' include:
+
+- Host CPU Usage: 75.3%
+- Host CPU Usage: 50%
+- Host CPU Usage: 40%
+- Host CPU Usage: 30%
+No, there are no other metrics available for the K3sHost named 'worker1' besides 'Host CPU Usage'.
+Relevant metrics for the 'Object detection' service include:
+
+- Service Throughput: 30 req/s (tunable)
+- Service Latency: 200 ms (tunable)
+- Service CPU Limit Cores: 0.5 cores (not tunable)
+- Service Memory Limit: 512 MiB (not tunable)
+Yes, there are additional metrics for the switch named 'switch1' that should be included.
+No additional metrics for the K3s Cluster named 'K3s Cluster' are suggested for inclusion.
+There are no specific metrics available for the K3sHost named 'worker1' besides 'Host CPU Usage'.
+The metrics associated with the 'Object detection' service include:
+
+1. Service Throughput: 30 req/s
+2. Service Latency: 200 ms
+3. Service CPU Limit Cores: 0.5 cores
+4. Service Memory Limit: 512 MiB
+
+No additional metrics are listed.
+The additional metric available for 'switch1' is Host CPU Usage, which is at 75.3%.
+Yes, there are 2 metrics available for the NetworkTopology named 'Network Topology'.
+The K3s Cluster has a metric called "Host CPU Usage," which indicates overall cluster performance. Current values are 75.3%, 50%, 40%, and 30%.
+No additional metrics for the switch named 'switch1' have been recorded beyond Network Throughput and Network Latency.
+The additional metrics for the NetworkTopology named 'Network Topology' are:
+
+- **Network Throughput**: 4.27 MBps
+- **Network Latency**: 100 ms

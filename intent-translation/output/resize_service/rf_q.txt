@@ -1,0 +1,21 @@
+User Question:
+"Because of the increased number of users, the image resizing service is taking too long to process images. I want to improve the total latency, but when there are fewer users, I want to avoid overprovisioning."
+
+Refined Subquestions:
+
+1. **Technical Requirements and Constraints**
+   - What are the current compute resources (CPU, memory) allocated for the image resizing service, and how do they correlate with the increasing number of users?
+   - What specific image characteristics (e.g., resolution, file size, format) impact the processing time and resource consumption of the image resizing service?
+   - Are there any bottlenecks in network bandwidth or storage I/O that could be influencing the latency?
+
+2. **Performance and Quality-of-Service (QoS) Metrics**
+   - What is the acceptable latency threshold for image resizing that ensures user satisfaction, especially during peak usage?
+   - How does the processing time scale with the number of concurrent users, and what are the expected processing times for different load scenarios?
+   - Are there specific performance metrics (e.g., throughput, queue time, processing time per image) that are critical to monitor for this service?
+
+3. **Cost-Efficiency and Resource Adaptation**
+   - What cloud infrastructure metrics (SLIs) (e.g., CPU utilization, memory usage, storage performance) can be monitored and dynamically adjusted to manage costs while improving performance?
+   - How can auto-scaling or other dynamic resource allocation strategies be implemented to accommodate fluctuations in user demand without overprovisioning during low-usage periods?
+   - Are there any cost trade-offs (e.g., reserved instances vs. on-demand instances) that can be considered to maintain performance while staying within budget constraints? 
+
+By addressing these subtasks, we can gather the necessary information to devise a solution that enhances performance while controlling costs based on user demand fluctuations.

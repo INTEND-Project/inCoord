@@ -1,0 +1,62 @@
+The metrics associated with the "Object detection" service are:
+
+1. Service Throughput (tunable: Yes)
+2. Service Latency (tunable: Yes)
+The current value of Service Latency for the "Object detection" service is 200 ms, and it is tunable.
+The current value of Service Throughput for the "Object detection" service is 30, and it is tunable.
+The metrics associated with the K3sHost running the "Object detection" service are:
+
+1. Service Throughput (Tunable: Yes)
+2. Service Latency (Tunable: Yes)
+The current value of Network Latency associated with the NetworkTopology is 100, and it is tunable.
+The current value of Network Throughput associated with the NetworkTopology is 4.27, and it is tunable.
+There is no specific information available regarding the metrics associated with the K3sHost "master" or their tunability.
+The metrics associated with the K3sHost "worker1" are:
+
+1. Service Throughput - Tunable
+2. Service Latency - Tunable
+The metrics associated with the K3sHost "worker2" are:
+
+1. Service Throughput (tunable)
+2. Service Latency (tunable)
+The metrics associated with the K3sHost "worker3" are:
+
+1. Service Throughput (tunable)
+2. Service Latency (tunable) 
+
+Both metrics are tunable.
+The current value of Service Latency for the Object detection service is 200 ms.
+The current value of Service Throughput for the Object Detection service is 30 req/s.
+The current value of Network Latency for the NetworkTopology is 100 ms.
+The current value of Network Throughput for the NetworkTopology is 4.27 MBps.
+No specific metrics associated with the K3sHost "master" were found, and it is unclear if they are tunable.
+The current value of Service Latency for the Object detection service is 200 ms.
+The current value of Service Throughput for the Object detection service is 30 req/s.
+The current value of Network Latency for the NetworkTopology is 100 ms.
+The current value of Network Throughput for the NetworkTopology is 4.27 MBps.
+There are no specific metrics associated with the K3sHost "master" provided. Additionally, whether they are tunable is not mentioned.
+The current values of Service Latency and Service Throughput for the K3sHost "master" are not available.
+There are several metrics related to the Drone:
+
+1. **Service Throughput**:
+   - 30 req/s
+   - 10 req/s
+   - 200 req/s
+   - 100 req/s
+   - 120 req/s
+
+2. **Service Latency**:
+   - 200 ms
+   - 20 ms
+   - 10 ms
+   - 50 ms
+The current value of the Service Latency for the K3sHost "master" is not available.
+No information is available regarding the current value of the Service Throughput for the K3sHost "master."
+There are no specific metrics associated with the K3sHost "master" provided. Additionally, there is no information on whether they are tunable.
+There is no available information on the current values of Service Latency and Service Throughput for the K3sHost "master."
+The additional metrics related to the Drone in the knowledge graph are:
+
+- Network Throughput: 4.27 MBps
+- Network Latency: 100 ms
+The current value of the Service Latency for the K3sHost "master" is not available.
+The current value of the Service Throughput for the K3sHost "master" is not available.

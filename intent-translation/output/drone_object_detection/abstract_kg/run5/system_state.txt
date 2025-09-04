@@ -1,0 +1,135 @@
+The names of all Drones available in the system are:
+1. Source Drone 1
+2. Source Drone 2
+3. Source Drone 3
+4. Source Drone 4
+The system includes the following drones:
+
+1. Source Drone 1
+2. Source Drone 2
+3. Source Drone 3
+4. Source Drone 4
+
+Please provide specific details for each drone to outline their specifications and capabilities.
+The information regarding the name and configuration of the KubernetesCluster (K3s) supporting the object detection service is not available.
+The names of all services are:
+
+1. Resize image
+2. Black and white
+3. Object detection (this service specifically handles object detection)
+4. Alarm
+5. DB
+The connected metrics for the Object Detection Service are:
+
+1. **Service Throughput** - Tunable: Yes
+2. **Service Latency** - Tunable: Yes
+The connected Metrics for the KubernetesCluster are:
+
+1. **Network Throughput** - Tunable: Yes
+2. **Network Latency** - Tunable: Yes
+The K3sHost running the Object detection service is named **worker1**.
+The deployed Network Topology for the Kubernetes Cluster includes:
+
+1. **Network Throughput** - Tunable
+2. **Network Latency** - Tunable
+- **Service Latency**: 
+  - Values: 20, 50, 200, 20, 10
+  - Tunable: Yes
+
+- **Network Latency**: 
+  - Value: 100
+  - Tunable: Yes
+
+- **Network Throughput**: 
+  - Value: 4.27
+  - Tunable: Yes
+To keep the Service Latency Metric below the required threshold for real-time operation, consider the following adjustments:
+
+1. Aim for a latency of 10 ms.
+2. Maintain latency consistently at 20 ms or below.
+3. Avoid values approaching 50 ms or higher.
+
+These adjustments can help ensure optimal performance for real-time operations.
+To maintain low latency for communication with the dashboard, consider these optimizations for the Network Latency Metric:
+
+1. **Reduce the Network Latency Value**: Aim to decrease the current latency of 100 ms.
+2. **Tuning Parameters**: Utilize tunable settings to optimize performance further.
+
+Implementing these strategies can help achieve lower latency.
+The tuning option available for the Network Throughput Metric is to adjust the value, currently set at 4.27 MBps, to ensure sufficient bandwidth for data transfer.
+The system has four drones, each operating within the K3s Cluster on various hosts:
+
+1. **Source Drone 1**
+   - Hosts: master, worker1, worker2, worker3
+
+2. **Source Drone 2**
+   - Hosts: master, worker1, worker2, worker3
+
+3. **Source Drone 3**
+   - Hosts: master, worker1, worker2, worker3
+
+4. **Source Drone 4**
+   - Hosts: master, worker1, worker2, worker3
+The configuration of the Kubernetes Cluster (K3s) supporting the object detection service is as follows: 
+
+- **Cluster Name:** K3s Cluster
+- **Cluster Type:** K3s
+- **Host Name:** worker1
+The configurations of the K3sHost named **worker1** are as follows:
+
+1. **Service Throughput**: 
+   - Name: Service Throughput
+   - Value: 30 req/s
+   - Tunable: True
+
+2. **Service Latency**: 
+   - Name: Service Latency
+   - Value: 200 ms
+   - Tunable: True
+
+3. **Service**: 
+   - Name: Object detection
+   - Pod Count: 6
+The name of the deployed Network Topology for the Kubernetes Cluster is "Network Topology."
+Yes, there is detailed information available on the specifications and capabilities of the following drones in the system:
+
+1. Source Drone 1
+2. Source Drone 2
+3. Source Drone 3
+4. Source Drone 4
+
+All of these drones are part of the K3s Cluster.
+The configuration of the KubernetesCluster (K3s) supporting the object detection service includes:
+
+- **Cluster Name**: K3s Cluster
+- **Type**: K3s
+- **Worker Node**: worker1
+- **Network Topology**: Defined but not specified in detail.
+The configurations of the K3sHost named **worker1** are as follows:
+
+- **Service Name**: Object detection
+- **Pod Count**: 6
+
+Metrics:
+1. **Service Throughput**: 30 req/s (Tunable)
+2. **Service Latency**: 200 ms (Tunable)
+The deployed Network Topology for the Kubernetes Cluster includes the following details:
+
+- **Network Throughput**: 4.27 MBps (Tunable)
+- **Network Latency**: 100 ms (Tunable)
+Yes, there are four drones available in the system: Source Drone 1, Source Drone 2, Source Drone 3, and Source Drone 4. Detailed specifications and capabilities for each drone can be provided.
+The configuration of the KubernetesCluster (K3s) supporting the object detection service is as follows:
+
+- **Cluster Name**: K3s Cluster
+- **Cluster Type**: K3s
+- **Worker Node**: worker1
+- **Service**: Object detection
+- **Pod Count**: 6
+The configurations for the K3sHost named **worker1** are as follows:
+
+- **Service**: Object detection
+  - **Pod Count**: 6
+- **Metrics**:
+  - **Service Throughput**: 30 req/s (tunable)
+  - **Service Latency**: 200 ms (tunable)
+The deployed Network Topology for the Kubernetes Cluster is a K3s Cluster. Specific functions and components were not detailed.

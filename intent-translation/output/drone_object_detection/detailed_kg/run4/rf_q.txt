@@ -1,0 +1,17 @@
+User Question: "I am going to fly my drone in Vienna and I need to be sure that object detection classifications of people are sent to my dashboard in real-time without loss."
+
+Refined Subquestions:
+
+1. **Technical Requirements and Constraints**
+   - What are the specifications of the drone and its onboard processing capabilities for object detection?
+   - What type of network connectivity (e.g., cellular, Wi-Fi, satellite) is available in the area of operation, and what are its expected bandwidth and latency characteristics?
+   - What is the expected volume and frequency of the data being transmitted for object detection classifications?
+
+2. **Performance and Quality-of-Service (QoS) Metrics**
+   - What are the maximum allowable latency and packet loss rates that can be tolerated for the real-time transmission of object detection data?
+   - What level of accuracy and reliability is required for the object detection classifications to ensure they are actionable and useful in real-time?
+
+3. **Cost-Efficiency and Resource Adaptation**
+   - Are there budget constraints for data transmission services, and how can those constraints inform the choice of networking solutions (e.g., prioritizing cost-effective data plans versus higher performance options)?
+   - Which cloud infrastructure metrics (SLIs) (e.g., data transfer rates, network latency, processing time) can be monitored and adjusted to ensure seamless, real-time data transmission to the dashboard?
+   - Are there possible trade-offs (e.g., adjusting video resolution or frame rates) that could help maintain real-time performance without exceeding budget or quality requirements?

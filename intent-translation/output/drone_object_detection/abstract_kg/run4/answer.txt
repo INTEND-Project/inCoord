@@ -1,0 +1,118 @@
+## 1. Plan Formation
+
+### Subtasks:
+- Decompose real-time object detection streaming into:
+  - Compute (object detection/model inference on drone or cloud)
+  - Network (latency, throughput for transmission Vienna <-> dashboard)
+  - Reliability (lossless transmission, real-time constraint)
+- Identify which tunable metrics matter for cloud infrastructure configuration.
+
+---
+
+## 2. Information Gathering & Research
+
+**System State Summary:**
+- Tunable observable metrics:  
+  - Service Latency (currently 200 ms, tunable)
+  - Service Throughput (currently 30 req/s, tunable)
+  - Network Latency (currently 100 ms, tunable)
+  - Network Throughput (currently 4.27 MBps, tunable)
+
+**Relevant Research & Best Practices:**
+- [MDPI, 2024]: Real-time drone object detection systems often transmit only detections or features, not whole video, for bandwidth efficiency. Typical frame rates for transmission are 1-3 fps (out of possible 10-30), depending on detection frequency.
+- [CMU, Bandwidth-efficient Live Video Analytics]: System latency is the sum of: 
+  1. Processing delay (on drone)
+  2. Network transmission delay
+  3. Cloud processing delay
+  4. Dashboard rendering delay
+  - Target end-to-end latency for real-time: typically 200 ms or less.
+  - Peak bandwidth for detection feature streaming: 1–10 Mbps, but features-only transmission can be below 5 Mbps.
+- Lossless transmission: usually requires reliable protocols (e.g., TCP), sufficient bandwidth, and tuning to avoid packet loss and reordering on wireless links.
+
+---
+
+## 3. Metric Estimation & Modeling
+
+### Refined Problem Statement:
+**Ensure that object detection results (classifications of people) from a drone in Vienna are transmitted to the dashboard in (near) real-time (≤200 ms end-to-end delay) and with no data loss, via the tunable infrastructure-level metrics.**
+
+### Key Performance Indicators:
+
+| Metric                  | Estimated Value      | Min–Max Range    | Dependencies/Notes                          |
+|-------------------------|---------------------|------------------|---------------------------------------------|
+| **End-to-End Latency**  | ≤200 ms             | 150–250 ms       | Sum of all system latencies                 |
+| - Service Latency       | 80 ms               | 50–100 ms        | Processing per request (model inference)    |
+| - Network Latency       | 100 ms              | 80–150 ms        | Per frame transmission Vienna <-> dashboard |
+| **Throughput**          | 30 req/s            | 10–50 req/s      | Frames or detections per second             |
+| **Network Throughput**  | ≥4.27 MBps          | 2–10 MBps        | Must cover peak detection/report traffic    |
+| **Loss Rate**           | 0%                  | 0                | Must guarantee no loss (infrastructure)     |
+
+#### Dependencies:
+- Lower network latency enables lower end-to-end latency.
+- Throughput must be sufficient for the rate of detection events (not raw video).
+- Network throughput must cover the maximum expected detection result data size.
+- Service latency is bounded by compute resource configuration and load.
+
+**Assumptions:**
+- The dashboard can process detections as soon as they arrive.
+- All processing or buffering outside the measured Service and Network metrics is negligible or already optimized.
+- Vienna network infrastructure supports required throughput and latency (as seen in knowledge graph and reference links).
+
+---
+
+## 4. Metric Refinement (Research Validation Cycle 2)
+
+**Validation:**
+- Literature and practice indicate that 100–200 ms network latency and 4–10 MBps throughput for detection metadata is feasible in urban Europe (Vienna included) with current LTE/5G and Wi-Fi.
+- Best-in-class commercial real-time detection dashboards aim for <200 ms update delay.
+- Feature-only (not video) transmission reduces bandwidth needs and lowers probability of packet loss.
+
+**Refined Recommendations:**
+- **Service Latency**: Tune to ≤80 ms per detection. If possible, prioritize "people" class for faster inference.
+- **Service Throughput**: Tune to 30–50 req/s (to cover all detection results, including bursts).
+- **Network Latency**: Target ≤100 ms. Ensure low jitter.
+- **Network Throughput**: Ensure ≥4.27 MBps (preferably 5–10 MBps for buffer).
+- **Lossless Transmission**: Validate link reliability and configure network to guarantee zero packet loss.
+
+---
+
+## 5. Output Generation
+
+### Configurable Metrics (Tunable Observable Metrics Table)
+
+| Metric Name           | Description                                                | Estimated Value | Min–Max Range | Dependencies                         |
+|-----------------------|-----------------------------------------------------------|-----------------|--------------|--------------------------------------|
+| Service Latency       | Time to infer and produce detection on infra              | 80 ms           | 50–100 ms    | Affects end-to-end latency           |
+| Service Throughput    | Max detections/second system can process                  | 30 req/s        | 10–50 req/s  | Limited by compute/network           |
+| Network Latency       | Transmission delay (drone to dashboard)                   | 100 ms          | 80–150 ms    | Affects end-to-end latency           |
+| Network Throughput    | Max data transfer rate for detection results              | 4.27 MBps       | 2–10 MBps    | Must cover peak detection output     |
+
+### Observable Metrics Table (Relevant for Problem)
+
+| Metric Name           | Current Value | Tunable | Description                   |
+|-----------------------|--------------|---------|-------------------------------|
+| Service Latency       | 200 ms       | Yes     | Det. inference per request    |
+| Service Throughput    | 30 req/s     | Yes     | Detections processed/sec      |
+| Network Latency       | 100 ms       | Yes     | Drone→Dashboard delay         |
+| Network Throughput    | 4.27 MBps    | Yes     | Data rate for detection res.  |
+
+---
+
+## 6. Summary & Recommendations
+
+- **Tune Service Latency** to target ≤80 ms, ideally by allocating sufficient compute resources to the object detection container/service.
+- **Increase Service Throughput** to at least 30 req/s; allow for burst periods of up to 50 req/s if possible.
+- **Ensure Network Latency** stays below 100 ms (tune network QoS settings, prioritize detection traffic).
+- **Maintain Network Throughput** at ≥4.27 MBps, ideally 5–10 MBps for additional safety margin.
+- **Monitor for packet loss**; use acknowledgments/retransmission at infra level as required.
+
+---
+
+**References:**  
+- [MDPI, 2024: Privacy-Preserving Live Video Analytics for Drones](https://www.mdpi.com/2076-3417/14/22/10254)  
+- [CMU, Bandwidth-Efficient Live Video Analytics PDF](https://elijah.cs.cmu.edu/DOCS/drone2018-CAMERA-READY.pdf)  
+- System state data from your infrastructure knowledge graph
+
+---
+
+_These configurations, when applied, should ensure that object detection classifications of people from your drone in Vienna are reliably and promptly delivered to your dashboard in real-time without loss._

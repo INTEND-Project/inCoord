@@ -1,0 +1,120 @@
+## Refined Problem Statement
+
+The user requires real-time, lossless delivery of drone-based object detection results (specifically, classifications of people) to a dashboard while operating in Vienna. The system consists of drones, network infrastructure (possibly including LTE/5G/Wi-Fi/Switch), and a cloud-based object detection service. The infrastructure's configurable aspect is limited to network and service-related tunable metrics; hardware or application-level changes are not permitted.
+
+---
+
+## Technical Subcomponents
+
+1. **Service Layer**
+   - Object Detection Service (Pod-based; 6 pods deployed)
+   - Service Throughput (tunable): currently 30 req/s
+   - Service Latency (tunable): currently 200 ms
+   - Service CPU/Memory limits (not tunable)
+
+2. **Network Layer**
+   - Network Throughput (tunable): currently 4.27 Mbps
+   - Network Latency (tunable): currently 100 ms
+
+3. **End-to-End Pipeline**
+   - Drones capture images/frames.
+   - Images sent to the detection service in the cloud.
+   - Classification results sent to dashboard.
+
+---
+
+## Metric Estimation & Modeling
+
+### 1. Latency
+- **End-to-End Acceptable Latency for Real-Time**: Industry and research (e.g., SteelEagle, CMU 2024) indicate that for “real-time” object detection feedback, sub-500 ms is generally regarded as usable; <300 ms is optimal for human-in-the-loop control.
+    - Current service latency: 200 ms (tunable)
+    - Current network latency: 100 ms (tunable)
+    - Estimated total (service + network): 300 ms (best-case, excluding drone-side or dashboard-side latency)
+    - **Target**: <300 ms; upper bound: 500 ms
+
+### 2. Throughput
+- **Service Throughput**: 30 req/s (tunable, matches drone output)
+    - For typical detection tasks, 10-30 fps is standard for smooth detection; more than 30 may be overkill for people classification.
+- **Network Throughput**: 4.27 Mbps (tunable)
+    - Sufficient for classification results (minimal bandwidth), but must also ensure video/image upload is not congested if full frames are sent.
+    - **Target**: At least 5 Mbps per drone for robust transmission or as per frame size/compression (see below).
+
+### 3. Loss
+- **Packet/Data Loss**: Not explicitly measured in system but can be inferred from throughput and latency consistency. For lossless delivery, network and service throughput must meet or exceed data generation rates.
+
+### 4. Vienna Constraints
+- Urban density and interference may elevate network latency and jitter, increasing the need for headroom in throughput and low base latency.
+
+---
+
+## Research-Refinement Insights
+
+1. **Latency Benchmarks**:
+   - Research shows cloudlet-based setups can achieve latencies as low as 367 ms (AWS PDrAW configuration), but high median values (~500-900 ms) with standard setups in urban areas.
+   - Key bottleneck: network latency (can be reduced with edge compute, but not in this scenario).
+
+2. **Throughput Benchmarks**:
+   - For simple classification data (not full video), under 1 Mbps is usually sufficient, but if sending full frames, 5-10 Mbps per video stream may be required, depending on compression.
+
+3. **Tunable Metric Dependencies**:
+   - **Lowering service latency often requires increasing service throughput**.
+   - Increasing network throughput can decrease network latency (by reducing queuing delays).
+
+---
+
+## Configurable Metrics
+
+| Metric Name        | Description                                              | Current Value | Est. Value (Target) | Min-Max Range (Typical) | Dependencies           |
+|--------------------|---------------------------------------------------------|---------------|---------------------|-------------------------|------------------------|
+| Service Latency    | Time to process inference/classification per request    | 200 ms        | ≤150 ms             | 50–200 ms               | ↑Throughput ↓Latency   |
+| Service Throughput | Req/s processed by detection service cluster            | 30 req/s      | ≥30 req/s           | 10–120 req/s            | ↑Throughput ↓Latency   |
+| Network Latency    | RTT from drone → service → dashboard                    | 100 ms        | ≤80 ms              | 10–200 ms               | ↓Latency ↑Throughput   |
+| Network Throughput | Data transmission bandwidth (aggregate)                 | 4.27 Mbps     | ≥5 Mbps             | 1–10 Mbps               | ↑Throughput ↓Latency   |
+
+---
+
+## Observable Metrics (including tunable and not tunable)
+
+| Metric Name        | Description                                              | Current Value | Est. Value (Target) | Min-Max Range (Typical) | Dependencies           |
+|--------------------|---------------------------------------------------------|---------------|---------------------|-------------------------|------------------------|
+| Host CPU Usage     | Drone/K3sHost CPU utilization                           | Not provided  | N/A                 | N/A                     | N/A                    |
+| Service CPU Limit  | CPU cores per service pod                               | 0.5           | 0.5                 | Not tunable             | N/A                    |
+| Service Memory Limit| Memory per service pod                                 | 512 MiB       | 512 MiB             | Not tunable             | N/A                    |
+| Service Latency    | (Tunable, see above)                                    | 200 ms        | ≤150 ms             | 50–200 ms               | See above              |
+| Service Throughput | (Tunable, see above)                                    | 30 req/s      | ≥30 req/s           | 10–120 req/s            | See above              |
+| Network Latency    | (Tunable, see above)                                    | 100 ms        | ≤80 ms              | 10–200 ms               | See above              |
+| Network Throughput | (Tunable, see above)                                    | 4.27 Mbps     | ≥5 Mbps             | 1–10 Mbps               | See above              |
+
+---
+
+## Constraints & Assumptions
+
+- Drones and detection service are not upgradable at hardware or application level.
+- Only infrastructure (service/network) metrics can be tuned.
+- Vienna’s urban environment may introduce variable latency/jitter; recommended to set targets comfortably below upper bounds.
+- Real-time is defined as ≤300 ms end-to-end latency for dashboard update after detection.
+
+---
+
+## Recommendations
+
+- **Set Service Latency** to ≤150 ms (reduce from 200 ms), ensuring fast inference.
+- **Ensure Service Throughput** is maintained at ≥30 req/s (more if multiple drones active).
+- **Tune Network Latency** to as low as possible (≤80 ms), possibly by prioritizing detection traffic.
+- **Provision Network Throughput** at ≥5 Mbps per active drone to ensure headroom above typical needs.
+- **Monitor observable metrics** for spikes or bottlenecks; alert if latency exceeds 300 ms or throughput falls below target.
+- **Consider redundancy/failover** only if network jitter spikes are observed (monitor, but not tunable here).
+
+---
+
+### References
+
+- [Benchmarking Drone Video Stream Latency](http://reports-archive.adm.cs.cmu.edu/anon/2024/CMU-CS-24-128.pdf)
+- [Fly Eye: Drone Communication Systems](https://www.flyeye.io/drone-technology-communication/)
+- [Object Detection Model Performance on Drones](https://www.mdpi.com/1424-8220/24/19/6347)
+- System state and metrics per user context
+
+---
+
+**Summary:**  
+By tuning the `service latency`, `service throughput`, `network latency` and `network throughput` within the recommended ranges, you can meet real-time, lossless object detection delivery requirements for drones operating in Vienna. Constantly monitor and adjust these metrics for sustained performance given the variable urban network conditions.

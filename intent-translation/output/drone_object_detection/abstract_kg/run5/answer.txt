@@ -1,0 +1,119 @@
+### Refined Problem Statement
+
+You want to ensure that, when operating your drone in Vienna, object detection classifications of people are transmitted from the drone to your dashboard in real time, with no loss, using the currently deployed cloud infrastructure (K3s Cluster with object detection service on worker1). The challenge is to achieve ultra-low latency and zero-loss delivery under the connectivity and compute constraints of your environment.
+
+---
+
+## 1. Technical Subcomponents
+
+- **End-to-end latency:** Time from capturing an image on the drone, through object detection, to classification received on dashboard.
+- **Network bandwidth/throughput:** Sufficient to handle data sent from drone to cluster and onwards to dashboard.
+- **Packet loss/reliability:** Ensure classifications are delivered without loss.
+- **Cloud service SLI tuning:** Adjust service/network latency and throughput to meet real-time guarantees.
+- **Region-specific considerations:** Vienna’s mobile/edge/cloud network quality.
+
+---
+
+## 2. Metric Estimation & Modeling
+
+### a. Acceptable Real-Time Latency Thresholds
+
+- **Real-time dashboard update (drone ops):** Target ≤200ms end-to-end (based on WebRTC/real-time video standards, sources: [Maris Tech](https://www.maris-tech.com/blog/drone-video-streaming-solutions-a-complete-guide-for-defense-and-security-applications/), [MDPI](https://www.mdpi.com/2504-446X/7/10/620)).
+- **Object detection processing:** Common frameworks (e.g., YOLO) achieve 25ms-50ms per frame ([IRJET](https://www.irjet.net/archives/V10/i8/IRJET-V10I873.pdf)).
+- **Network latency in Vienna:** Commercial mobile networks support <100ms, edge/urban can go to ~30ms ([Opensignal](https://www.opensignal.com/reports/2023/10/austria/mobile-network-experience)).
+- **Loss tolerance:** Aim for <0.1% packet loss for dashboard delivery; ideally zero for text/json payloads.
+
+### b. Expected Data Rates
+
+- **Object detection classification size:** 200B–2KB per detection (label, bbox, confidence, timestamp).
+- **Detection rate:** 10–30 req/s typical for drones ([VATE](https://dsg.tuwien.ac.at/team/snastic/publications/ICFEC__Maresch_VATE_Object_Detection.pdf)).
+- **Peak bandwidth for classifications:** (at 2KB × 30 req/s) = ~60KB/s ≈ 0.06MBps (classification data only).
+- **Current network throughput:** 4.27MBps, which is much higher than required for classifications (assumption: other flows may share this link).
+
+### c. Service and Network Metrics (From System State)
+
+- **Service Latency (Object Detection):** Current: 200ms
+- **Service Throughput:** Current: 30 req/s
+- **Network Latency:** Current: 100ms
+- **Network Throughput:** Current: 4.27MBps
+
+#### Dependencies
+
+- **End-to-end latency = Network latency (drone → K3s) + Service latency (object detection) + Network latency (K3s → dashboard)**
+- **Effective throughput:** Must cover expected detection rate × classification size.
+- **Packet loss:** Not directly tunable, but can be minimized by maintaining low network utilization and tuning latency.
+
+---
+
+## 3. Configurable Metrics
+
+| Metric                   | Description                                        | Current Value | Estimated Value | Min-Max Range | Dependencies                                |
+|--------------------------|----------------------------------------------------|---------------|-----------------|--------------|----------------------------------------------|
+| Service Latency          | Object detection time per request                  | 200ms         | ≤20ms (target)  | 10–50ms      | Increases total end-to-end latency           |
+| Service Throughput       | Max classification requests processed per second   | 30 req/s      | ≥30 req/s       | 10–60 req/s  | Must match drone detection output rate       |
+| Network Latency          | K3s network round-trip latency                     | 100ms         | ≤20ms           | 10–50ms      | Increases E2E latency; affects delivery time |
+| Network Throughput       | Max data rate supported for object detection flows | 4.27MBps      | ≥0.06MBps       | 0.01–10MBps  | Must exceed classification data rate         |
+
+**All above are tunable.**
+
+---
+
+## 4. Observable Metrics
+
+| Metric             | Description                                      | Current Value | Estimated Value | Min-Max Range | Dependencies                      |
+|--------------------|--------------------------------------------------|---------------|-----------------|---------------|------------------------------------|
+| Service Latency    | Object detection request latency                 | 200ms         | ≤20ms           | 10–50ms       | Lower reduces E2E latency          |
+| Service Throughput | Detection results processed per second           | 30 req/s      | ≥30 req/s       | 10–60 req/s   | Should match drone output          |
+| Network Latency    | Network round-trip latency (K3s)                 | 100ms         | ≤20ms           | 10–50ms       | Lower reduces E2E latency          |
+| Network Throughput | Max network data transfer rate (K3s)             | 4.27MBps      | ≥0.06MBps       | 0.01–10MBps   | Should cover all traffic types     |
+| Packet Loss Rate   | % of packets lost in transmission                | N/A           | 0% (target)     | 0–0.1%        | Lower = higher reliability         |
+| Dashboard Update Interval | Time between dashboard updates             | N/A           | ≤200ms          | 50–500ms      | Determined by other metrics        |
+
+---
+
+## 5. Constraints & Assumptions
+
+- **Assumptions:** Each drone sends only classification data, not raw video. Vienna’s public network (cellular/edge) supports <100ms latency in urban areas. Dashboard is cloud-connected with similar network constraints as K3s cluster.
+- **Constraints:** All improvements must use tunable infrastructure metrics; no changes to application code, drone hardware, or service placement.
+
+---
+
+## 6. Recommendations (Supported by Metrics)
+
+- **Tune Service Latency (Object Detection):** Reduce from 200ms to ≤20ms by scaling pods or provisioning more resources to worker1 if possible.
+- **Tune Network Latency (K3s):** Reduce from 100ms to ≤20ms by optimizing network configuration, using higher QoS for classification traffic.
+- **Tune Network Throughput:** Ensure it is maintained above 0.06MBps for classification data, but current config (4.27MBps) is more than sufficient.
+- **Tune Service Throughput:** Maintain at or above 30 req/s; increase if drone output rate rises.
+
+---
+
+### Configurable Metrics
+
+| Metric               | Description                                    | Current Value | Estimated Value | Min-Max Range | Dependencies           |
+|----------------------|------------------------------------------------|---------------|-----------------|---------------|------------------------|
+| Service Latency      | Object detection per request                   | 200ms         | ≤20ms           | 10–50ms       | Network latency        |
+| Service Throughput   | Max detections processed/sec                   | 30 req/s      | ≥30 req/s       | 10–60 req/s   | Drone detection rate   |
+| Network Latency      | Network round-trip latency for K3s             | 100ms         | ≤20ms           | 10–50ms       | Service latency        |
+| Network Throughput   | Max network data rate for K3s                  | 4.27MBps      | ≥0.06MBps       | 0.01–10MBps   | Data rate requirement  |
+
+### Observable Metrics
+
+| Metric               | Description                                    | Current Value | Estimated Value | Min-Max Range | Dependencies           |
+|----------------------|------------------------------------------------|---------------|-----------------|---------------|------------------------|
+| Service Latency      | Object detection per request                   | 200ms         | ≤20ms           | 10–50ms       | Network latency        |
+| Service Throughput   | Max detections processed/sec                   | 30 req/s      | ≥30 req/s       | 10–60 req/s   | Drone detection rate   |
+| Network Latency      | Network round-trip latency for K3s             | 100ms         | ≤20ms           | 10–50ms       | Service latency        |
+| Network Throughput   | Max network data rate for K3s                  | 4.27MBps      | ≥0.06MBps       | 0.01–10MBps   | Data rate requirement  |
+| Packet Loss Rate     | % of packets lost in transit                   | N/A           | 0%              | 0–0.1%        | Network utilization    |
+| Dashboard Update Interval | Time between dashboard updates             | N/A           | ≤200ms          | 50–500ms      | E2E latency            |
+
+---
+
+## Summary
+
+- **Reduce both Service Latency and Network Latency to ≤20ms each** to ensure real-time dashboard delivery.
+- **Maintain Service Throughput at ≥30 req/s** to match drone output.
+- **Ensure Network Throughput stays above 0.06MBps** for object detection classifications (current config is sufficient).
+- **Monitor and minimize packet loss** through network tuning.
+
+These actions, using the tunable metrics outlined above, will help you confidently achieve real-time, lossless delivery of object detection classifications from your drone to your dashboard in Vienna.

@@ -1,0 +1,24 @@
+### Initial User Query:
+"I am going to fly my drone in Vienna and I need to be sure that object detection classifications of people are sent to my dashboard in real-time without loss."
+
+#### Refined Subquestions:
+
+1. **Technical Requirements and Constraints**
+
+   - What specific compute resources (e.g., CPU, GPU) are required for the object detection algorithms to run efficiently on the drone?
+   - What network bandwidth is necessary to ensure that data from the drone can be transmitted to the dashboard in real-time?
+   - What is the expected volume of data (e.g., image resolution, frame rate) that will be generated during the flight?
+
+2. **Performance and Quality-of-Service (QoS) Metrics**
+
+   - What are the acceptable latency thresholds for the real-time transmission of object detection classifications?
+   - What quality metrics (e.g., accuracy of detection, classification confidence scores) are critical to ensure that the object detection is reliable and actionable?
+   - How important is data integrity, and what protocols are in place to prevent data loss during transmission?
+
+3. **Cost-Efficiency and Resource Adaptation**
+
+   - Which cloud infrastructure metrics (SLIs) can be adjusted (e.g., network throughput, data storage, compute scaling) to optimize performance while adhering to budget constraints?
+   - Are there any acceptable trade-offs (e.g., reducing the frequency of data transmission, adjusting image quality) that could help in managing costs while ensuring real-time object detection and classification?
+   - What contingency measures can be implemented if connectivity issues arise during the flight (e.g., local caching of data on the drone)?
+
+By addressing these subquestions, we can comprehensively analyze the requirements for real-time object detection and ensure a robust and efficient cloud infrastructure setup to meet the user's needs.

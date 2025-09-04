@@ -1,0 +1,164 @@
+## 1. Plan Formation
+
+### Decompose User Intent:
+**Goal:** Real-time, lossless transmission of "person" object detection classifications from a drone flying in Vienna to a dashboard.
+**Requirements:**
+- Real-time streaming (low latency)
+- No data loss
+- Reliable delivery from drone → K3s cluster → dashboard
+
+### Key Technical Subcomponents:
+- **Network latency and throughput**: From drone to cluster and cluster to dashboard
+- **Service latency**: Object detection processing time per frame/event
+- **Bandwidth constraints**: Support for data volume from drone(s)
+- **Reliability/No loss**: Ensured by throughput and zero packet loss
+- **Processing capacity**: Sufficient for real-time object detection
+
+---
+
+## 2. Information Gathering
+
+### Review System State & Metrics:
+- **Network Throughput**: 4.27 MBps (tunable)
+- **Network Latency**: 100 ms (tunable)
+- **Service Latency (Object Detection)**: 200 ms (tunable)
+- **Service Throughput (Object Detection)**: 30 req/s
+- **Pods for Object Detection**: 6
+- **Pods total**: 14
+- **No current CPU/memory metrics**
+- **Multiple drones and hosts, multi-service cluster**
+- **Metrics tunable: Service Latency, Network Throughput, Network Latency**
+
+### Web & GraphRAG Research (Initial Hypotheses):
+- Real-time video inferencing typically targets **end-to-end latency <500 ms** (ideally <300 ms)
+- For classification only (not streaming full video), required bandwidth per classification is low (few KB per event)
+- Network jitter and packet loss must be minimized for reliability
+- Throughput of 30 req/s is sufficient for most real-time use cases, assuming detection/classification per second is <30
+
+---
+
+## 3. Metric Estimation & Modeling
+
+### Breakdown:
+- **Total End-to-End Latency** = Drone transmission latency + Network Latency + Service (Processing) Latency + Delivery latency to dashboard
+- **Target End-to-End Latency** (industry): **<500 ms** recommended, with sub-300 ms for high responsiveness [source: AWS, Azure IoT, NVIDIA Metropolis].
+- **Network Throughput**: Needs to support classification event rate; 4.27 MBps is >30x the requirement for classifications (if each event is <10 KB, 30/s ≈ 300 KB/s).
+- **Service Latency (Processing)**: Target **<100 ms** for near-instant inference (current max: 200 ms).
+- **Network Latency**: Target **<100 ms** (current is exactly 100 ms).
+
+#### Dependencies:
+- End-to-end latency is the sum of network + processing + delivery.
+- Throughput is only a constraint if classification frequency or payload size increases.
+
+#### Lossless Transmission:
+- With current throughput and latency, lossless delivery is feasible if network and service can handle peaks.
+- Need to ensure network buffers and processing queues do not overflow.
+
+---
+
+## 4. Refinement & Synthesis (Iteration 2)
+
+#### Validate with External Data:
+- Multiple drone edge-AI references (e.g., Skydio, Parrot) cite <300 ms from image capture to result for real-time dashboards.
+- Network throughput for event-driven detection is not a bottleneck unless streaming video.
+- Reliability mechanisms (e.g., TCP, application-level ACKs) ensure lossless event delivery if throughput and latency are within SLA.
+
+#### Synthesis:
+- **Service Latency** is the most critical tunable for improving responsiveness.
+- **Network Latency** is at the upper bound of recommended threshold.
+- **Network Throughput** is sufficient but can be increased if multi-drone or higher detection rates are anticipated.
+
+---
+
+## 5. Output Generation
+
+### Refined Problem Statement
+
+To enable real-time, lossless transmission of object detection classifications (specifically people) from a drone operating in Vienna to a dashboard, the underlying cloud infrastructure must be configured to minimize end-to-end latency and support sufficient throughput to prevent bottlenecks or data loss.
+
+---
+
+### Estimated Key Metrics
+
+| Metric                         | Estimated Value | Min-Max Range   | Dependencies                                       | Notes                            |
+|---------------------------------|----------------|-----------------|----------------------------------------------------|-----------------------------------|
+| Service Latency (ms)            | 200            | 10–200          | Network Latency, compute resources                 | Tunable, target <100 ms           |
+| Network Latency (ms)            | 100            | 20–100          | Physical path, peering, congestion                 | Tunable, target <100 ms           |
+| Network Throughput (MBps)       | 4.27           | 1–10            | Aggregate data volume, number of drones            | Tunable, well above requirements  |
+| Service Throughput (req/s)      | 30             | 10–50           | Pod count, CPU/GPU, incoming event rate            | Not tunable (info only)           |
+
+---
+
+### Configurable Metrics
+
+| Metric Name         | Description                                     | Estimated Value | Min–Max Range | Dependencies                  |
+|---------------------|-------------------------------------------------|----------------|---------------|-------------------------------|
+| Service Latency     | Time to process and classify an image/event     | 200 ms         | 10–200 ms     | Compute resources, pod count  |
+| Network Latency     | Time to transmit event from drone to cluster    | 100 ms         | 20–100 ms     | Network congestion, topology  |
+| Network Throughput  | Max data rate between drone and cluster         | 4.27 MBps      | 1–10 MBps     | Number of drones, event size  |
+
+---
+
+### Observable Metrics
+
+| Metric Name         | Description                                     | Current Value | Notes                        |
+|---------------------|-------------------------------------------------|---------------|------------------------------|
+| Service Latency     | Object detection service latency (ms)           | 200 ms        | Tunable                      |
+| Service Throughput  | Object detection requests processed per second  | 30 req/s      |                              |
+| Network Latency     | Cluster network latency (ms)                    | 100 ms        | Tunable                      |
+| Network Throughput  | Cluster network throughput (MBps)               | 4.27 MBps     | Tunable                      |
+
+---
+
+### Constraints and Assumptions
+
+- Assumes classification events (not full video) are being sent (payload <10 KB/event).
+- No additional network congestion or service overload from other cluster services.
+- Dashboard connectivity and latency are outside the system’s direct control but should be proximate to the cluster for optimal performance.
+- No packet loss is expected within the throughput and latency bounds.
+
+---
+
+## Recommendations
+
+To fulfill your requirements in Vienna:
+
+1. **Tune Service Latency:**  
+   - Aim for <100 ms by allocating sufficient resources (CPU/GPU, pod scaling).  
+   - Current value (200 ms) is at the upper end; reduce toward lower bound (10–50 ms) if possible.
+
+2. **Tune Network Latency:**  
+   - Ensure network path from drones to cluster is optimized.  
+   - Maintain latency at or below 100 ms; strive for <80 ms where possible.
+
+3. **Maintain Network Throughput:**  
+   - 4.27 MBps is more than sufficient; monitor to ensure it remains above aggregate event rate.
+
+4. **Monitor and Alert:**  
+   - Set alerts for spikes in service/network latency or throughput drops.
+
+---
+
+### Configurable Metrics Table
+
+| Metric Name         | Description                                  | Estimated Value | Min–Max Range | Dependencies                  |
+|---------------------|----------------------------------------------|----------------|---------------|-------------------------------|
+| Service Latency     | Processing/classification time (ms)          | 200            | 10–200        | Compute resources, pod count  |
+| Network Latency     | Data transmission delay (ms)                 | 100            | 20–100        | Network conditions            |
+| Network Throughput  | Max event data rate (MBps)                   | 4.27           | 1–10          | Drones, event size            |
+
+---
+
+### Observable Metrics Table
+
+| Metric Name         | Description                                  | Current Value  | Notes         |
+|---------------------|----------------------------------------------|---------------|---------------|
+| Service Latency     | Object detection service latency (ms)        | 200           | Tunable       |
+| Service Throughput  | Requests processed per second                | 30            |               |
+| Network Latency     | Network delay (ms)                           | 100           | Tunable       |
+| Network Throughput  | Network bandwidth (MBps)                     | 4.27          | Tunable       |
+
+---
+
+**Summary**:  
+Your infrastructure supports real-time, lossless delivery if you maintain or improve current Service (target <100 ms) and Network Latency (target <100 ms, ideally lower) and keep Network Throughput above 1 MBps per drone stream. These metrics can be tuned as outlined above. Monitor all observable metrics and be proactive with scaling and alerting to ensure robust operation during drone flights over Vienna.

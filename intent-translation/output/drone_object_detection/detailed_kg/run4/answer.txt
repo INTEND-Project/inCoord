@@ -1,0 +1,115 @@
+## Refined Problem Statement
+
+The user is deploying a drone in Vienna and wants to guarantee that object detection classifications of people are delivered to a dashboard in real time without loss. This requires configuring the underlying infrastructure (network and service) to minimize end-to-end latency and prevent data loss, accounting for the drone’s local processing, network transport, and the object detection service in the cloud.
+
+---
+
+## 1. Breakdown of Technical Subcomponents
+
+**A. Real-time Constraints & Data Flow**
+- The drone performs object detection and sends classification results (typically lightweight JSON or message) to a remote dashboard.
+- Latency from object detection output on the drone to dashboard display must be as low as possible (ideally under 300 ms for "real-time" experience).
+
+**B. Network**
+- Wireless connectivity in Vienna (assume LTE/5G is available).
+- Network throughput and latency are key: need to ensure bandwidth is sufficient for burst data and latency is minimized.
+
+**C. Cloud Service**
+- The object detection service is already running with tunable Service Latency and Throughput.
+- Infrastructure allows tuning of service and network metrics (Network/Service Throughput, Network/Service Latency).
+
+---
+
+## 2. Key Metrics & Estimates (Based on Knowledge, Web, and Literature for Vienna/Europe)
+
+| Subcomponent         | Metric                        | Estimate/Range                            | Reasoning/Source                               |
+|----------------------|------------------------------|-------------------------------------------|------------------------------------------------|
+| Network (Vienna)     | Network Latency (ms)         | 50-120 ms (LTE), 20-60 ms (5G)            | Empirical studies, typical LTE/5G values       |
+|                      | Network Throughput (Mbps)    | 5-30 Mbps (LTE/5G, urban avg)             | Real-world drone streaming papers, Vienna data |
+| Service (Object Det) | Service Latency (ms)         | Current: 200 ms (tunable), Target: <150 ms| Literature & observable metric                 |
+|                      | Service Throughput (req/s)   | Current: 30 req/s (tunable), Target: 30-50 | Burst handling, real-time constraint           |
+| End-to-End           | Total Latency (ms)           | ~200-350 ms                               | Sum of above                                   |
+
+**Reliability (Packet Loss):** Real-time JSON data must be reliably delivered; cellular networks typically <1% packet loss, but must be monitored.
+
+---
+
+## 3. Metric Dependencies
+
+- **End-to-End Latency** = Network Latency + Service Latency
+- **Throughput**: Must be greater than expected data rate from drone (usually <1 Mbps for object classification messages, but tune for bursts).
+
+---
+
+## 4. Constraints & Assumptions
+
+- Drone object detection runs onboard; only classification results (not video) are sent.
+- Network is LTE or better in Vienna, with urban coverage.
+- Budget/cost not explicitly specified, so prioritize performance.
+- Packet loss to be minimized (no loss tolerated for classification messages).
+
+---
+
+## 5. Configurable Metrics
+
+| Metric Name         | Description                              | Current Value   | Estimated Value  | Min-Max Range   | Dependencies                  |
+|---------------------|------------------------------------------|-----------------|------------------|-----------------|-------------------------------|
+| Service Latency     | Time from request to classification reply| 200 ms          | 120-150 ms       | 100-200 ms      | Inverse to throughput         |
+| Service Throughput  | Requests processed per second            | 30 req/sec      | 30-50 req/sec    | 20-80 req/sec   | Affects latency               |
+| Network Latency     | Transport time (drone→cloud→dashboard)   | 100 ms          | 50-120 ms        | 40-150 ms       | Sum with service latency      |
+| Network Throughput  | Network bandwidth available (switch/core)| 4.27 Mbps       | 5-10 Mbps        | 2-30 Mbps       | Must > data rate              |
+
+---
+
+## 6. Observable Metrics
+
+| Metric Name         | Current Value | Estimated Value   | Min-Max Range     | Dependencies                  |
+|---------------------|--------------|-------------------|-------------------|-------------------------------|
+| Service Latency     | 200 ms       | 120-150 ms        | 100-200 ms        | Inverse Service Throughput    |
+| Service Throughput  | 30 req/sec   | 30-50 req/sec     | 20-80 req/sec     | Affects Service Latency       |
+| Network Latency     | 100 ms       | 50-120 ms         | 40-150 ms         | Sum with Service Latency      |
+| Network Throughput  | 4.27 Mbps    | 5-10 Mbps         | 2-30 Mbps         | Must > data rate              |
+
+---
+
+## Recommendations
+
+- **Service Latency**: Tune object detection service to process within 120-150 ms. Lower if possible to allow for network jitter.
+- **Network Latency**: Optimize routing and prioritize traffic to achieve 50-120 ms (LTE/5G urban Vienna).
+- **Network Throughput**: Ensure a minimum of 5 Mbps reserved for drone traffic to handle spikes and prevent congestion.
+- **Service Throughput**: Set above peak expected message rate, ideally 30-50 req/sec.
+
+---
+
+## References
+
+- [Super accurate low latency object detection on a surveillance UAV (IEEE)](https://ieeexplore.ieee.org/document/8758060/)
+- [Analyzing Real-time Video Delivery over Cellular Networks for Drones (Nitin Mohan)](https://www.nitindermohan.com/documents/2022/pubs/drone_imc.pdf)
+- [Cloud SLIs Best Practices (Google SRE Book)](https://sre.google/sre-book/service-level-indicators/)
+
+---
+
+### Configurable Metrics
+
+| Metric Name         | Description                                 | Current Value | Estimated Value | Min-Max Range | Dependencies              |
+|---------------------|---------------------------------------------|--------------|----------------|---------------|---------------------------|
+| Service Latency     | Object detection service response latency   | 200 ms       | 120-150 ms     | 100-200 ms    | Inverse to throughput     |
+| Service Throughput  | Max requests per second handled             | 30 req/sec   | 30-50 req/sec  | 20-80 req/sec | Affects latency           |
+| Network Latency     | End-to-end network transport time           | 100 ms       | 50-120 ms      | 40-150 ms     | Sum with service latency  |
+| Network Throughput  | Bandwidth available for data transmission   | 4.27 Mbps    | 5-10 Mbps      | 2-30 Mbps     | Must > data rate          |
+
+---
+
+### Observable Metrics
+
+| Metric Name         | Current Value | Estimated Value   | Min-Max Range     | Dependencies                  |
+|---------------------|--------------|-------------------|-------------------|-------------------------------|
+| Service Latency     | 200 ms       | 120-150 ms        | 100-200 ms        | Inverse Service Throughput    |
+| Service Throughput  | 30 req/sec   | 30-50 req/sec     | 20-80 req/sec     | Affects Service Latency       |
+| Network Latency     | 100 ms       | 50-120 ms         | 40-150 ms         | Sum with Service Latency      |
+| Network Throughput  | 4.27 Mbps    | 5-10 Mbps         | 2-30 Mbps         | Must > data rate              |
+
+---
+
+**Summary**:  
+To ensure real-time, lossless delivery of object detection classifications from your drone in Vienna, tune Service Latency to <150 ms, Service Throughput to handle at least 30-50 req/sec, Network Latency to <120 ms, and Network Throughput to >5 Mbps. This configuration will satisfy real-time dashboard requirements for classification with current Vienna LTE/5G infrastructure.

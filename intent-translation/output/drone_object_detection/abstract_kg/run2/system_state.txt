@@ -1,0 +1,24 @@
+The information regarding the name of the source drone being used for object detection is not available.
+There is no information available regarding which service is responsible for processing the incoming data from the drone.
+The name of the Kubernetes cluster that hosts the object detection service is K3s Cluster.
+The K3s host associated with the object detection service is worker1.
+The metrics associated with the object detection service are:
+
+1. Service Throughput (tunable)
+2. Service Latency (tunable)
+The service latency metric values are 20, 50, 200, and 10. All of these values are tunable.
+The network latency metric value is 100, and it is tunable.
+The network throughput metric value is 4.27, and it is tunable.
+The network topology associated with the Kubernetes cluster is named "Network Topology."
+The metrics associated with K3s host nodes are:
+
+1. Service Throughput (tunable)
+2. Service Latency (tunable)
+
+Both metrics are tunable.
+The name of the source drone being used for object detection is not provided.
+No information is available regarding the service responsible for processing the incoming data from the drone.
+The name of the source drone being used for object detection is not provided.
+No information is available regarding the service responsible for processing the incoming data from the drone.
+The name of the source drone being used for object detection is not provided.
+No information is available regarding the service responsible for processing the incoming data from the drone.

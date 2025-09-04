@@ -1,0 +1,79 @@
+The metrics associated with the Drone named 'Source Drone 1' are all related to 'Host CPU Usage', and none of them are tunable.
+There are no metrics connected to the Kubernetes Cluster named 'K3s Cluster' available.
+The metric linked to the K3sHost named 'master' is 'Host CPU Usage', and its tunable status is False.
+The 'Object detection' service has the following metrics:
+
+1. Service Throughput - Tunable
+2. Service Latency - Tunable
+3. Service CPU Limit Cores - Not tunable
+4. Service Memory Limit MiB - Not tunable
+The metrics associated with the Switch named 'switch1' are:
+
+1. **Network Throughput** - Tunable: Yes
+2. **Network Latency** - Tunable: Yes
+The metrics linked to the NetworkTopology named 'Network Topology' are:
+
+1. **Network Throughput** - Tunable: Yes
+2. **Network Latency** - Tunable: Yes
+The metrics for the Drone named 'Source Drone 1' are as follows:
+
+- **Service Latency:** Not specified
+- **Network Latency:** Not specified
+- **Network Throughput:** Not specified
+- **Service Throughput:** Not specified
+- **Host CPU Usage:** 75.3%
+- **Service CPU Limit Cores:** 50
+- **Service Memory Limit MiB:** 40
+
+Tunable status:
+- **Host CPU Usage:** Not tunable
+- **Service CPU Limit Cores:** Not tunable
+- **Service Memory Limit MiB:** Not tunable
+
+(Note: Other metrics data were not provided.)
+No metrics information is available for the Kubernetes Cluster named 'K3s Cluster'.
+For the K3sHost named 'worker1', the only metric available is:
+
+- Host CPU Usage: 50 (not tunable)
+
+Other metrics such as Service Latency, Network Latency, Network Throughput, Service Throughput, Service CPU Limit Cores, and Service Memory Limit MiB are not provided.
+For the 'Object detection' service:
+
+- Service Latency: 200 ms (tunable: Yes)
+- Service Throughput: 30 requests/sec (tunable: Yes)
+- Service CPU Limit Cores: 0.5 (tunable: No)
+- Service Memory Limit MiB: 512 (tunable: No)
+
+Network Latency and Network Throughput metrics were not provided.
+For the switch named 'switch1':
+
+- **Network Throughput:** 4.27 (tunable: Yes)
+- **Network Latency:** 100 (tunable: Yes)
+
+No information is available for Service Latency, Service Throughput, Host CPU Usage, Service CPU Limit Cores, and Service Memory Limit MiB.
+For the Network Topology named 'Network Topology':
+
+- **Network Throughput**: 4.27 (tunable: Yes)
+- **Network Latency**: 100 (tunable: Yes)
+
+Other metrics (Service Latency, Service Throughput, Host CPU Usage, Service CPU Limit Cores, and Service Memory Limit MiB) were not provided.
+There is no available information regarding why there are no metrics connected to the Kubernetes Cluster named 'K3s Cluster'.
+There are no missing metrics for the Drone named 'Source Drone 1' regarding Service Latency, Network Latency, Network Throughput, and Service Throughput.
+There are no missing metrics for the K3sHost named 'worker1' regarding Service Latency, Network Latency, Network Throughput, and Service Throughput.
+The missing metrics for the Network Topology named 'Network Topology' are:
+
+- Service Latency
+- Service Throughput
+- Host CPU Usage
+- Service CPU Limit Cores
+- Service Memory Limit MiB
+There is no available information regarding why there are no metrics connected to the Kubernetes Cluster named 'K3s Cluster'.
+There are no metrics connected to the Kubernetes Cluster named 'K3s Cluster' because it is a K3s type cluster, which may have limited metrics collection capabilities compared to full Kubernetes clusters.
+There are no missing metrics for the 'Object detection' service regarding Network Latency and Network Throughput.
+The missing metrics for the Switch named 'switch1' are:
+
+- Service Latency
+- Service Throughput
+- Host CPU Usage
+- Service CPU Limit Cores
+- Service Memory Limit MiB

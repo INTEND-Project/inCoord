@@ -1,0 +1,148 @@
+## Step 1: Problem Breakdown
+
+**Refined problem statement:**  
+The user is flying a drone in Vienna and requires real-time, lossless transmission of object detection (specifically people) from the drone to a dashboard. This is a classic urban edge/cloud streaming scenario, where latency, throughput, and reliability of the network and processing layers are critical.
+
+### Technical Subcomponents
+
+- **Compute:** Drone performs object detection, results are forwarded to the dashboard. Likely, processing is on the drone or a nearby edge/cloud node.
+- **Network:** Results are transmitted from the drone to the dashboard (potentially via mobile/4G/5G or Wi-Fi in Vienna).
+- **Storage:** Not a focus unless buffering is needed for reliability.
+- **Metrics:** Latency, throughput, and reliability (packet loss).
+
+---
+
+## Step 2: Key Metrics and Estimation
+
+### Observable/Tunable Metrics Extracted from System State
+
+**Object Detection Service:**
+- Service Throughput (tunable): Current 30 req/s
+- Service Latency (tunable): Current 200 ms
+
+**Network (switch1 & Network Topology):**
+- Network Throughput (tunable): Current 4.27 MBps (~34.2 Mbps)
+- Network Latency (tunable): Current 100 ms
+
+**Non-tunable metrics:**
+- Host CPU Usage: 30–75.3% (drone, cluster, switch)
+- Service CPU Limit: 0.5 cores (not tunable)
+- Service Memory Limit: 512 MiB (not tunable)
+
+---
+
+### Realistic Metric Estimation & Research
+
+**Latency:**
+- Real-time object detection for user-facing dashboards typically requires end-to-end latency ≤ 500 ms, with optimal performance < 250 ms (reference: cloud streaming, gaming, and video analytics benchmarks).
+- **Breakdown:**  
+  - Network latency: 100 ms (current, tunable)
+  - Service latency: 200 ms (current, tunable)
+  - Buffer for jitter/queue: ~50–100 ms
+
+**Throughput:**  
+- 30 req/s is currently supported.  
+- Assuming classification results are small (<1KB), the network should handle even a moderate burst (>100 req/s) within existing network throughput.
+
+**Reliability (No Loss):**  
+- Lossless transmission is challenging over wireless in urban Vienna (potential for interference, multipath, congestion).
+- Must ensure throughput and latency are sufficient, with some headroom for retransmissions or error correction.
+
+**Urban Vienna Factors:**  
+- 4G/5G coverage is strong but may have bursty latency.
+- Wi-Fi can be congested or have coverage gaps.
+
+---
+
+### Metric Dependency and Recommendations
+
+- **Reducing network latency** will directly improve end-to-end latency.
+- **Increasing throughput** is only needed if object detection result rate increases beyond 30 req/s.
+- **Service latency** can be tuned if compute resources are available, but CPU/memory caps may limit this.
+
+---
+
+## Step 3: Tables
+
+### Configurable Metrics
+
+| Metric Name            | Description                                                     | Current Value | Estimated Value | Min-Max Range           | Dependency                        |
+|------------------------|-----------------------------------------------------------------|---------------|-----------------|-------------------------|------------------------------------|
+| Service Throughput     | Object detections sent per second                               | 30 req/s      | 30–60 req/s     | 10–100 req/s            | Bounded by network throughput      |
+| Service Latency        | Processing time per detection                                   | 200 ms        | 150 ms          | 100–250 ms              | Affected by CPU/mem availability   |
+| Network Throughput     | Network capacity for detection results (switch & topology)      | 4.27 MBps     | 4.27 MBps       | 1–10 MBps (~8–80 Mbps)  | Only needs to exceed data rate     |
+| Network Latency        | Round-trip latency for detection messages                       | 100 ms        | 80 ms           | 50–150 ms               | Affects end-to-end latency         |
+
+### Observable Metrics
+
+| Metric Name            | Description                                  | Current Value | Estimated Value | Min-Max Range            | Dependency                        |
+|------------------------|----------------------------------------------|---------------|-----------------|--------------------------|------------------------------------|
+| Host CPU Usage         | CPU usage on drone/cluster/switch            | 30–75.3%      | 40–80%          | 20–90%                   | High load may cause throttling     |
+| Service CPU Limit      | CPU allocated to object detection service    | 0.5 cores     | 0.5 cores       | 0.1–1 cores              | Not tunable in current setup       |
+| Service Memory Limit   | Memory allocated to object detection service | 512 MiB       | 512 MiB         | 256–1024 MiB             | Not tunable in current setup       |
+
+---
+
+## Step 4: Constraints & Assumptions
+
+- Assumes object detection results are small and not image/video streams.
+- Assumes network is not shared by high-bandwidth applications that could cause congestion.
+- Real-time = <500 ms end-to-end latency (industry standard for "real-time" analytics).
+- No control over host resource allocation beyond observable/tunable metrics.
+
+---
+
+## Step 5: Solutions & Metric Adjustments
+
+**To ensure real-time, lossless delivery:**
+
+1. **Reduce and fix Network Latency:**  
+   Tune switch1 and Network Topology to aim for network latency as close to 80 ms or less.
+2. **Ensure sufficient Network Throughput:**  
+   Maintain current throughput (4.27 MBps) unless burst tests show need for higher rates.
+3. **Optimize Service Latency:**  
+   Tune object detection service parameters to reduce latency to ≤150 ms if possible.
+4. **Monitor Host CPU Usage:**  
+   Ensure CPU usage on Source Drone 1 and cluster does not exceed 85% to avoid throttling and dropped packets.
+
+---
+
+### Conclusion
+
+By tuning the above metrics, you can maximize the likelihood that object detection classifications are delivered in real-time and without loss. The focus should be on:
+
+- **Network Latency:** Lower to ~80 ms or better.
+- **Service Latency:** Lower to ≤150 ms if possible.
+- **Monitor and maintain throughput.**
+
+**No major changes needed unless scaling up detection frequency or adding more drones/sensors.**
+
+---
+
+## **Configurable Metrics Table**
+
+| Metric Name        | Description                                  | Current Value | Estimated Value | Min-Max Range         | Dependency                   |
+|--------------------|----------------------------------------------|---------------|-----------------|-----------------------|------------------------------|
+| Service Throughput | Object detections/sec to dashboard           | 30 req/s      | 30–60 req/s     | 10–100 req/s          | Must not exceed network cap   |
+| Service Latency    | Processing time per detection                | 200 ms        | 150 ms          | 100–250 ms            | CPU/mem limit, input rate    |
+| Network Throughput | Switch/network throughput for detection data | 4.27 MBps     | 4.27 MBps       | 1–10 MBps             | Must exceed detection rate   |
+| Network Latency    | Network roundtrip time                       | 100 ms        | 80 ms           | 50–150 ms             | Lower is better for E2E time |
+
+---
+
+## **Observable Metrics Table**
+
+| Metric Name          | Description                                         | Current Value | Estimated Value | Min-Max Range      | Dependency                 |
+|----------------------|-----------------------------------------------------|---------------|-----------------|--------------------|----------------------------|
+| Host CPU Usage       | CPU usage across drone/cluster/switch               | 30–75.3%      | 40–80%          | 20–90%             | High load may cause delay  |
+| Service CPU Limit    | CPU reserved for object detection                   | 0.5 cores     | 0.5 cores       | 0.1–1 cores        | Not tunable                |
+| Service Memory Limit | Memory reserved for object detection                | 512 MiB       | 512 MiB         | 256–1024 MiB       | Not tunable                |
+
+---
+
+**References:**
+- [Latency and throughput for real-time streaming](https://www.mdpi.com/2079-9292/14/12/2453)
+- [Detection accuracy and metrics](https://www.nature.com/articles/s41598-024-64232-z)
+- Industry benchmarks for urban drone data transfer and analytics
+
+**If you require further reduction in latency or reliability improvements, consider redundant network paths, error correction, or increasing resource allocations if possible.**

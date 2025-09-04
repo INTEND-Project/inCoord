@@ -1,0 +1,116 @@
+## Refined Problem Statement
+
+You are flying a drone in Vienna and require that object detection classifications (specifically for people) are delivered to your dashboard in real-time, with no loss. This requires configuring the cloud continuum (network, compute, storage) supporting the drone's data uplink, object detection processing (on a K3s Kubernetes cluster, node: worker1), and result delivery to your dashboard to minimize latency and loss.
+
+---
+
+## 1. Technical Subcomponents
+
+- **End-to-End Latency**: Time from object detection event (on drone/camera) to display on dashboard.  
+    - Includes: network uplink (drone → cloud), processing delay (object detection service), network downlink (cloud → dashboard).
+- **Service Throughput**: Number of object detection classifications processed and transmitted per second.
+- **Network Latency & Throughput**: Affects real-time delivery and loss. 
+- **Reliability (Packet Loss)**: Data loss must be minimized (target: 0% for classifications).
+
+---
+
+## 2. Metric Estimation and Dependencies
+
+### Estimated Metrics (based on expert knowledge and context)
+
+| Component                  | Typical Value (Est.)      | Reference/Assumption |
+|----------------------------|--------------------------|----------------------|
+| E2E Latency (object → dashboard) | < 300 ms (target < 150 ms) | [arXiv:1904.02024](https://arxiv.org/abs/1904.02024) |
+| Service Throughput         | 10-30 inferences/sec      | System state: 30 cur.|
+| Network Latency            | 50-100 ms (one way)       | Urban 4G/WiFi        |
+| Network Throughput         | 2-5 Mbps                  | Detections are <1KB  |
+| Packet Loss                | 0% (critical)             | User intent          |
+| Service Latency (obj. det) | 20-200 ms (cur: 200 ms)   | System state         |
+
+**Dependencies:**
+- E2E Latency = Network Uplink Latency + Service (Processing) Latency + Network Downlink Latency
+- Packet Loss inversely related to network quality and buffer/queue management.
+
+---
+
+## 3. Constraints and Assumptions
+
+- No info on drone model or downlink path to dashboard (assume cloud → public internet).
+- All relevant metrics (service/network latency, throughput) are tunable.
+- Dashboard expected to be web/mobile app (standard APIs).
+
+---
+
+## 4. Configurable Metrics (Tunable Only)
+
+| Metric Name         | Description                                             | Current Value | Estimated Value | Min-Max Range    | Dependencies                  |
+|---------------------|--------------------------------------------------------|---------------|-----------------|------------------|-------------------------------|
+| Service Latency     | Object detection processing time (ms)                  | 200           | 50-100          | 20-200           | Affects E2E latency           |
+| Service Throughput  | Processed detections/sec                               | 30            | ≥30             | 10-50            | Must meet input data rate     |
+| Network Latency     | Latency between drone/cluster/dashboard (ms)           | Unknown*      | 50-100          | 20-200           | E2E latency, impacts loss     |
+| Network Throughput  | Uplink bandwidth (Mbps)                                | Unknown*      | 2-5             | 1-10             | Must support throughput       |
+
+\* Network metrics must be measured in-situ (depends on drone's link and Vienna’s network).
+
+---
+
+## 5. Observable Metrics (All)
+
+| Metric Name         | Description                                             | Current Value | Estimated Value | Min-Max Range    | Dependencies                  |
+|---------------------|--------------------------------------------------------|---------------|-----------------|------------------|-------------------------------|
+| Service Latency     | Object detection processing time (ms)                  | 200           | 50-100          | 20-200           | See above                     |
+| Service Throughput  | Processed detections/sec                               | 30            | ≥30             | 10-50            | See above                     |
+| Network Latency     | Network delay (ms)                                     | Unknown       | 50-100          | 20-200           | See above                     |
+| Network Throughput  | Bandwidth (Mbps)                                       | Unknown       | 2-5             | 1-10             | See above                     |
+| Packet Loss         | % of lost packets                                       | Not measured  | 0               | 0-1              | Affected by network metrics   |
+
+---
+
+## 6. Recommendations (Cloud Infrastructure)
+
+- **Tunable Configuration Targets:**
+    - Set Service Latency on K3s node to ≤100 ms.
+    - Ensure Service Throughput is ≥ expected detection rate (e.g., 30/sec).
+    - Configure Network Latency budgets so that E2E latency is < 150 ms.
+    - Allocate sufficient Network Throughput (≥2 Mbps for detection metadata, higher if images are sent).
+- **Monitoring:** Continuously monitor packet loss; implement auto-scaling for throughput spikes.
+- **Validation:** Test end-to-end with actual drone to ensure real-world latency and loss targets are met.
+
+---
+
+### References:
+
+- [arXiv: Super accurate low latency object detection on a surveillance UAV](https://arxiv.org/abs/1904.02024)
+- Expert SLI guidance: Latency, throughput, availability are primary SLIs for real-time pipelines.
+
+---
+
+### Tables
+
+#### Configurable metrics
+
+| Metric Name        | Description                                      | Current Value | Estimated Value | Min-Max Range    | Dependencies             |
+|--------------------|--------------------------------------------------|---------------|-----------------|------------------|--------------------------|
+| Service Latency    | Processing time for object detection (ms)        | 200           | 50-100          | 20-200           | E2E latency, throughput  |
+| Service Throughput | Processed detections/sec                         | 30            | ≥30             | 10-50            | Input data rate          |
+| Network Latency    | Uplink/downlink latency (ms)                     | Unknown       | 50-100          | 20-200           | Affects E2E latency      |
+| Network Throughput | Bandwidth (Mbps)                                 | Unknown       | 2-5             | 1-10             | Must fit detection rate  |
+
+#### Observable metrics
+
+| Metric Name        | Description                                      | Current Value | Estimated Value | Min-Max Range    | Dependencies             |
+|--------------------|--------------------------------------------------|---------------|-----------------|------------------|--------------------------|
+| Service Latency    | Processing time for object detection (ms)        | 200           | 50-100          | 20-200           | See above                |
+| Service Throughput | Processed detections/sec                         | 30            | ≥30             | 10-50            | See above                |
+| Network Latency    | Uplink/downlink latency (ms)                     | Unknown       | 50-100          | 20-200           | See above                |
+| Network Throughput | Bandwidth (Mbps)                                 | Unknown       | 2-5             | 1-10             | See above                |
+| Packet Loss        | % of lost packets                                | Not measured  | 0               | 0-1              | Network/infra quality    |
+
+---
+
+## Summary
+
+- Focus on minimizing service latency and ensuring sufficient throughput on K3s cluster/worker1.
+- Allocate enough network bandwidth and minimize latency (target ≤100ms).
+- Continuously monitor for packet loss; target 0%.
+- These tunable metrics should be adjusted until real-time, lossless delivery to your dashboard is observed in Vienna.

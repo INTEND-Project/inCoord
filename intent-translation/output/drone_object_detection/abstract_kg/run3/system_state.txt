@@ -1,0 +1,83 @@
+The metrics associated with the 'Object detection' service are:
+
+- **Service Throughput**: 30 req/s
+- **Service Latency**: 200 ms
+Yes, the 'Service Latency' metric is tunable. Its current values include 20, 50, 200, and 10.
+Yes, the 'Network Latency' metric is tunable, and its current value is 100.
+Yes, the 'Network Throughput' metric is tunable, and its current value is 4.27.
+The 'Service Throughput' metric is tunable, and its current values are 100, 120, 30, 10, and 200.
+The K3sHost that runs the 'Object detection' service is **worker1**.
+The name of the KubernetesCluster hosting the 'Object detection' service is K3s Cluster.
+The drones sending data to the Kubernetes Cluster are:
+
+1. Source Drone 1
+2. Source Drone 2
+3. Source Drone 3
+4. Source Drone 4
+The pod count of the 'Object detection' service is 6.
+Yes, the current values of **Service Latency** are clearly stated as 20, 50, 200, 20, and 10.
+Yes, the K3sHost that runs the 'Object detection' service is mentioned: worker1.
+Yes, the current value of **Network Latency** is clearly stated as 100.
+Yes, the current value of **Network Throughput** is clearly stated as 4.27.
+Yes, specific metrics indicating tunability are detailed. Here are the metrics and their values:
+
+- Service Throughput: 100, 120, 30, 10, 200
+- Service Latency: 20, 50, 200, 20, 10
+- Network Throughput: 4.27
+- Network Latency: 100
+
+All metrics listed are tunable.
+Yes, all the drones that send data to the Kubernetes Cluster are mentioned: Source Drone 1, Source Drone 2, Source Drone 3, and Source Drone 4.
+No, there are no other K3sHosts besides worker1 running the 'Object detection' service.
+The values for assessing real-time processing are:
+
+- **Service Throughput**: 100, 120, 30, 10, 200
+- **Service Latency**: 20, 50, 200, 20, 10
+
+Please provide criteria for acceptable limits to further assess these values.
+The performance of the K3s Cluster is affected by the following metrics:
+
+- **Worker 1: Object Detection**
+  - Throughput: 30 req/s
+  - Latency: 200 ms
+
+- **Worker 2: Alarm**
+  - Throughput: 10 req/s
+  - Latency: 20 ms
+- **Worker 2: DB**
+  - Throughput: 200 req/s
+  - Latency: 10 ms
+
+- **Worker 3: Resize Image**
+  - Throughput: 100 req/s
+  - Latency: 20 ms
+- **Worker 3: Black and White**
+  - Throughput: 120 req/s
+  - Latency: 50 ms
+The acceptable limits for real-time processing are as follows:
+
+- **Service Throughput**: Minimum of 10 req/s and maximum of 200 req/s.
+- **Service Latency**: Minimum of 10 ms and maximum of 200 ms.
+- **Network Latency**: 100 ms.
+- **Network Throughput**: 4.27 MBps.
+The performance of the **K3s Cluster** is influenced by the following metrics across various workers:
+
+- **Worker 1 (Object Detection)**:
+  - Service Throughput: 30
+  - Service Latency: 200
+
+- **Worker 2**:
+  - **Alarm**: 
+    - Service Throughput: 10
+    - Service Latency: 20
+  - **DB**: 
+    - Service Throughput: 200
+    - Service Latency: 10
+
+- **Worker 3**:
+  - **Resize Image**: 
+    - Service Throughput: 100
+    - Service Latency: 20
+  - **Black and White**: 
+    - Service Throughput: 120
+    - Service Latency: 50

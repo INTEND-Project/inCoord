@@ -1,0 +1,37 @@
+No specific models or processing capabilities of the Drone were provided to influence the speed and efficiency of object detection.
+There is no information available regarding the metrics associated with the KubernetesCluster or their tunability.
+The metrics associated with the K3sHost include "Host CPU Usage." These metrics are not tunable.
+The Object Detection service configuration details are as follows:
+
+- **Pod Count**: 6
+- **Metrics**:
+  - **Service Throughput**: 30 (Tunable)
+  - **Service Latency**: 200 ms (Tunable)
+  - **Service CPU Limit**: 0.5 cores (Not Tunable)
+  - **Service Memory Limit**: 512 MiB (Not Tunable)
+There is no available information regarding the metrics connected to the Switch or their tunability.
+The Service Latency metric values are 20, 50, 200, and 10 milliseconds, and all are tunable.
+The Service Throughput metric values are 100, 120, 30, 10, and 200. All of these metrics are tunable.
+The Network Latency metric is 100, and it is tunable.
+The Network Throughput metric is 4.27, and it is tunable.
+No specific models or processing capabilities of the Drone were provided regarding their influence on the speed and efficiency of object detection.
+There are no specific metrics associated with the KubernetesCluster available in the provided information.
+No information is available regarding the metrics connected to the Switch and their tunability.
+The drones have the following specifications influencing object detection speed and efficiency:
+
+- **Service Throughput**: 30 requests per second (req/s)
+- **Service Latency**: 200 milliseconds (ms)
+- **Service CPU Limit**: 0.5 cores
+- **Service Memory Limit**: 512 MiB
+
+These attributes are consistent across all four drones.
+There is no specific information available regarding the metrics associated with the KubernetesCluster or their tunability.
+The metrics connected to the Switch are:
+
+1. Network Throughput (tunable)
+2. Network Latency (tunable) 
+
+Both metrics are tunable.
+The specific models of the drones influencing speed and efficiency in object detection include Source Drone 1, Source Drone 2, Source Drone 3, and Source Drone 4.
+No specific metrics or tunability information for the KubernetesCluster are provided.
+There are no specific metrics connected to the Switch provided. Therefore, I cannot confirm if they are tunable.
