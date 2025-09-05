@@ -75,8 +75,8 @@ You can use the provided `infrastructure_kg.cypher` and `expert_kg.cypher` files
 
 ## Workflow Diagram
 
-[//]: # (![Workflow Diagram]&#40;./workflow_graph.png&#41;)
-<img src="./workflow_graph.png" alt="Pipeline Overview" height="600"/>
+![Workflow Diagram](./workflow_graph.png)
+[//]: # (<img src="./workflow_graph.png" alt="Pipeline Overview" height="600"/>)
 
 
 
