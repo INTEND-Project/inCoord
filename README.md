@@ -7,7 +7,7 @@ To have a clear overview of the inCoord role in a multi-domain computing infrast
 
 inCoord operates based on high-level instructions translated and decomposed into actionable intents. This set contains at least one application-level intent that reflects the objective for the target application, and at least one instance-level intent for each domain instance. A dedicated component, intentTranslation, performs this translation through an external tool or an internal plugin in inCoord.  
 
-![translation](./utils/IntentTranslation Framework_croped.png)
+![translation](./utils/IntentTranslation-Framework_croped.png)
 
 To test our solution, we implemented a dedicated “Intent-to-Learning” plugin that, through a multi-agent system built on Large Language Models (LLMs), translates application-level intents into executable Reinforcement Learning (RL) environments. The Figure above shows the overall behavior.
 
