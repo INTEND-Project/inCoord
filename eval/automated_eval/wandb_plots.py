@@ -29,7 +29,6 @@ def plot_all_runs_actions(all_runs_data, title, filename):
     }
 
     for run_name, df in all_runs_data:
-        print(df)
         df.dropna().reset_index(drop=True)
         if "inCoord" in run_name:
             label, color, width = method_colors["inCoord"]
@@ -246,7 +245,7 @@ def plot_all_runs_boxplot(all_runs_data, title, filename,
     plt.close()
 
 
-def plot_all_runs_scatter(all_runs_data, title, filename):
+def plot_all_runs_scatter(all_runs_data, title, filename, LOWER_BOUND=1000, UPPER_BOUND=1500):
     plt.figure(figsize=(7, 3.5))
 
     added_label = {"inCoord": False, "Coord": False, "Expert": False, "DAs": False, "Reactive": False}
@@ -259,8 +258,6 @@ def plot_all_runs_scatter(all_runs_data, title, filename):
     }
     for run_name, df in all_runs_data:
         test_len = len(df)
-        print(run_name)
-        print(df)
         if "inCoord" in run_name:
             label, color, style, width = method_colors["inCoord"]
         elif "Coord" in run_name:
@@ -276,13 +273,13 @@ def plot_all_runs_scatter(all_runs_data, title, filename):
         added_label[label] = True
         plt.plot(df.index, df["lat"], linewidth=width, alpha=0.8, color=color, label=plot_label, linestyle=style)
 
-        first_mask_low = (df.index <= 164) & (df["lat"] < 2000)
-        first_mask_high = (df.index <= 164) & (df["lat"] > 3000)
+        first_mask_low = (df.index <= 164) & (df["lat"] < LOWER_BOUND)
+        first_mask_high = (df.index <= 164) & (df["lat"] > UPPER_BOUND)
         plt.scatter(df.index[first_mask_low], df["lat"][first_mask_low], s=5, color=color)
         plt.scatter(df.index[first_mask_high], df["lat"][first_mask_high], s=5, color=color)
 
-    plt.plot([0, 164], [2000, 2000], color="blue", linestyle="--", linewidth=1)
-    plt.plot([0, 164], [3000, 3000], color="blue", linestyle="--", linewidth=1)
+    plt.plot([0, 164], [LOWER_BOUND, LOWER_BOUND], color="blue", linestyle="--", linewidth=1)
+    plt.plot([0, 164], [UPPER_BOUND, UPPER_BOUND], color="blue", linestyle="--", linewidth=1)
 
     plt.xlim([0, 164])
     test_len = test_len / 4
@@ -303,7 +300,7 @@ def plot_all_runs_scatter(all_runs_data, title, filename):
 
 
 for name in names:
-    PROJECT_PATH = "[name]/" + name
+    PROJECT_PATH = "tuw_lacki/" + name
     NAMES = ["no_coord agents: reactive:", "TD3_context32500010 agents: reactive", "TD3_context32500010 agents: PPO",
              "no_coord agents: PPO:", "reactive agents: PPO:"]
 
@@ -345,7 +342,7 @@ for name in names:
         df_net, result2 = load_run_data(
             run,
             latency_key="total_latency.network_latency",
-            action_key="network_delay upper_limit"
+            action_key="network_delay action"
         )
         all_network_runs.append((run.display_name, df_net))
 
@@ -364,7 +361,7 @@ for name in names:
         df_comp, global_result = load_run_data(
             run,
             latency_key="total_latency.compute_latency",
-            action_key="compute_cpu upper_limit"
+            action_key="compute_cpu action" #for action plots of coordinators upper_limit
         )
         all_compute_runs.append((run.display_name, df_comp))
         all_latency_runs.append((run.display_name, global_result))
@@ -396,19 +393,19 @@ for name in names:
     plot_all_runs_scatter(
         all_network_runs,
         title="Network Response time Scatter",
-        filename=f"{name}_all_runs_network_scatter.pdf"
+        filename=f"{name}_all_runs_network_scatter.pdf", LOWER_BOUND=1000, UPPER_BOUND=1500
     )
 
     plot_all_runs_scatter(
         all_compute_runs,
         title="Compute Response time Scatter",
-        filename=f"{name}_all_runs_compute_scatter.pdf"
+        filename=f"{name}_all_runs_compute_scatter.pdf",LOWER_BOUND=1000, UPPER_BOUND=1500
     )
 
     plot_all_runs_scatter(
         all_latency_runs,
         title="Response time Violations",
-        filename=f"{name}_all_runs_total_scatter.pdf"
+        filename=f"{name}_all_runs_total_scatter.pdf",LOWER_BOUND=2000, UPPER_BOUND=3000
     )
 
 
@@ -464,15 +461,15 @@ for name in names:
 
     plot_all_runs_boxplot(all_network_runs,
                           title="Network Response time Distribution",
-                          filename=f"{name}_all_runs_network_boxplot.pdf")
+                          filename=f"{name}_all_runs_network_boxplot.pdf", LOWER_BOUND=1000, UPPER_BOUND=1500)
     plot_all_runs_boxplot(
         all_compute_runs,
         title="Compute Response time Distribution",
-        filename=f"{name}_all_runs_compute_boxplot.pdf"
+        filename=f"{name}_all_runs_compute_boxplot.pdf", LOWER_BOUND=1000, UPPER_BOUND=1500
     )
 
     plot_all_runs_boxplot(
         all_latency_runs,
         title="Response time Distribution",
-        filename=f"{name}_all_runs_total_boxplot.pdf"
+        filename=f"{name}_all_runs_total_boxplot.pdf", LOWER_BOUND=2000, UPPER_BOUND=3000
     )
