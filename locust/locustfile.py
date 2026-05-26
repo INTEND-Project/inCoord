@@ -33,8 +33,7 @@ def log_latency(request_type, name, response_time, response_length, exception, *
     log_file.flush()
 class MyUser(HttpUser):
     wait_time = constant(1)#between(1, 3)  # Adjust as needed
-    #host = "http://127.0.0.1:5000"     #url for microservice1 without the endpoint"/resize"
-    host = Microservice1_url
+    host = Microservice1_url # needs to be added accordingly
     image_data = None  # To store the cached image data
 
     def save_to_json(self, data):
@@ -44,7 +43,7 @@ class MyUser(HttpUser):
 
     def on_start(self):
         # Cache image once to avoid concurrent file access issues
-        with open('kermit.jpg', 'rb') as f:
+        with open('[image_name].jpg', 'rb') as f:
             self.image_data = f.read()
 
 
