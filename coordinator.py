@@ -42,8 +42,8 @@ class SLO():
         elif self.mode == "TD3_context5100001":
             self.models = [TD3.load(f"./models/context_reward_relative_5_256_0.0001_10000_1000_fr1")]
 
-        elif self.mode == "TD3_context5100002":
-            self.models = [TD3.load(f"./models/context_reward_relative_5_256_0.0001_10000_2000_fr1")]
+        elif self.mode == "TD3_context32500010":
+            self.models = [TD3.load(f"./models/context_reward_relative_3_512_0.0001_25000_10000_fr1")]
 
         elif self.mode == "TD3_context510000":
             self.models = [TD3.load(f"./models/context_reward_relative_5_256_0.0001_10000_6000_fr1")]
