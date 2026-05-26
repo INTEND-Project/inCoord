@@ -10,12 +10,12 @@ print("CUDA available:", torch.cuda.is_available())
 print("Device:", torch.cuda.get_device_name(0) if torch.cuda.is_available() else "CPU only")
 
 
-steps=[256]
-microsteps=[3] #Let's mimic actual env
-learning_rates=[1e-4] #1e-5 too small
+steps=[128, 256, 512] #256 too small
+microsteps=[5] #Let's mimic actual env
+learning_rates=[1e-5, 1e-4, 1e-3] #1e-5 too small
 #agent will interact with env a total of this timestamps
-total_timesteps=[25000] #Test different number of total timestamps
-learning_starts=[10000] #Test this kind of exploration
+total_timesteps=[60000] #Test different number of total timestamps
+learning_starts=[100000] #Test this kind of exploration
 for sigma in learning_starts:
     for microstep in microsteps:
         for step in steps:
@@ -26,8 +26,6 @@ for sigma in learning_starts:
                     env = General_Env(microstep)
                     check_env(env, warn=True)
                     n_actions = env.action_space.shape[-1]
-                    # action_noise = OrnsteinUhlenbeckActionNoise(mean=np.zeros(n_actions), sigma=0.3 * np.ones(n_actions))
-                    # action_noise = NormalActionNoise(mean=np.zeros(n_actions), sigma=0.3 * np.ones(n_actions))
                     seed = 42
                     env.action_space.seed(seed)
                     env.observation_space.seed(seed)

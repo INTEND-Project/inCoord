@@ -44,9 +44,9 @@ class ResourceAgent:
         mini_high_range = [1800, 2300]  # random.randint(2600, 2700)
 
         if remainder == 9:  # A1 has less than A2
-            self.service_latency_range = high_range
-        elif remainder == 8:
             self.service_latency_range = mini_low_range
+        elif remainder == 8:
+            self.service_latency_range = high_range
         elif remainder == 7:  # A1 has more than A2
             self.service_latency_range = high_range
         elif remainder == 6:
@@ -129,7 +129,7 @@ class General_Env(gym.Env):
             0,  # last action
             0,
             -np.inf,  # local nw
-            -np.inf,  # comp nw
+            -np.inf,  # local comp
             -np.inf  # global
         ], dtype=np.float32)
         high = np.array([
