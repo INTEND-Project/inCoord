@@ -1,4 +1,15 @@
-# inCoord
+## Repositories
+
+- [`inCoord-v2/`](./inCoord-v2) has the current inCoord implementation, presented at IEEE CLOUD 2026: intent-aware multi-domain coordination through hierarchical deep RL (domain agents + coordinator), deployed and evaluated on an iContinuum-based Kubernetes testbed. Integrated from Anna Lackinger's repository ([Lacki28/InCoord](https://github.com/Lacki28/InCoord)).
+- [`inCoord-first-demo/`](./inCoord-first-demo) contains the experiments for the CEC/ICNP 2025 paper: RL-based coordination demo (DQN, PPO, GRPO agents) on simulated bitrate/throughput and object-detection workloads, with training scripts, trained models, and result analysis.
+- [`intent-translation/`](./intent-translation) presents the intent translation pipeline for the CEC/ICNP 2025 paper, developed by Cveta Capova in the context of her thesis. An LLM multi-agent (LangGraph) framework combining web search and GraphRAG over Neo4j knowledge graphs to translate high-level business intents into executable RL environments.
+
+
+
+
+
+## inCoord Description
+
 Here, we display the architecture for inCoord. The goal is to build a flexible and self-adaptive solution for coordinating multi-domain infrastructure instances, based on intents. In complex and hierarchical systems, such as the computing continuum, switching from “how” to “what” is essential. Our key idea is to achieve that by only controlling the instance-level intents. We tune these intents, as knobs, to fulfill the application-level intent and handle conflicts across infrastructure domains. This approach makes the solution flexible and independent of intents and infrastructures, as it automatically triggers strategy adaptations for the involved instance managers. 
 
 ![incoord](./utils/inCoord-coordinator-inCoord-Components.png)
