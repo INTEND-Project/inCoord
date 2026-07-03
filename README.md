@@ -1,8 +1,8 @@
 ## Repositories
 
-- [`inCoord-v2/`](./inCoord-v2) has the current inCoord implementation, presented at IEEE CLOUD 2026: intent-aware multi-domain coordination through hierarchical deep RL (domain agents + coordinator), deployed and evaluated on an iContinuum-based Kubernetes testbed. Integrated from Anna Lackinger's repository ([Lacki28/InCoord](https://github.com/Lacki28/InCoord)).
-- [`inCoord-first-demo/`](./inCoord-first-demo) contains the experiments for the CEC/ICNP 2025 paper: RL-based coordination demo (DQN, PPO, GRPO agents) on simulated bitrate/throughput and object-detection workloads, with training scripts, trained models, and result analysis.
-- [`intent-translation/`](./intent-translation) presents the intent translation pipeline for the CEC/ICNP 2025 paper, developed by Cveta Capova in the context of her thesis. An LLM multi-agent (LangGraph) framework combining web search and GraphRAG over Neo4j knowledge graphs to translate high-level business intents into executable RL environments.
+- [`inCoord-v2/`](./inCoord-v2) has the current inCoord implementation, presented at [IEEE CLOUD 2026](https://services.conferences.computer.org/2026/cloud/): intent-aware multi-domain coordination through hierarchical deep RL (domain agents + coordinator), deployed and evaluated on an iContinuum-based Kubernetes testbed. Integrated from Anna Lackinger's repository ([Lacki28/InCoord](https://github.com/Lacki28/InCoord)).
+- [`inCoord-first-demo/`](./inCoord-first-demo) contains the experiments for the [CEC/ICNP 2025 paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=11192462): RL-based coordination demo (DQN, PPO, GRPO agents) on simulated bitrate/throughput and object-detection workloads, with training scripts, trained models, and result analysis.
+- [`intent-translation/`](./intent-translation) presents the intent translation pipeline for the [CEC/ICNP 2025 paper](https://ieeexplore.ieee.org/stamp/stamp.jsp?arnumber=11192441), developed by Cveta Capova in the context of her thesis. An LLM multi-agent (LangGraph) framework combining web search and GraphRAG over Neo4j knowledge graphs to translate high-level business intents into executable RL environments.
 
 
 
